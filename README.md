@@ -65,6 +65,7 @@ All commands respond in the language used to request the task (English or Spanis
 - Playwright (`npm install -g playwright`)
 - Chrome DevTools MCP configured
 - Chrome with remote debugging port 9222
+- **LLM with vision capabilities** (local or cloud) - Required for analyzing screenshots and extracting visual data from web pages
 
 ## Quick Start
 
