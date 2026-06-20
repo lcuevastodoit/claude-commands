@@ -120,7 +120,7 @@ Para cada test case generado, el archivo debe cumplir:
 7. **Scenario Outline**: cuando haya múltiples variaciones de datos para la misma lógica, usar `Scenario Outline` + `Examples`.
 8. **Criterios de aceptación explícitos**: incluir al final una lista de criterios de aceptación verificables.
 9. **Solo planificar en Fase 1**: no crear, editar ni borrar archivos de código hasta que el usuario apruebe.
-10. **Idioma**: responder siempre en español. El Gherkin puede estar en inglés.
+10. **Idioma**: responder en el idioma en que se solicite la tarea (español o inglés). El Gherkin puede estar en inglés.
 11. **No ignorar errores**: si falta contexto o hay ambigüedad, reportarlo claramente y pedir aclaración.
 
 ### Reglas de la fase de tests reales

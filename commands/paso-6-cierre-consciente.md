@@ -137,7 +137,7 @@ Cada instrucción debe incluir:
 3. **Resumen honesto**: no ocultar deuda técnica, riesgos o decisiones discutibles.
 4. **5 sugerencias de testeo manual**: exactamente cinco, cubriendo happy path, datos límite, permisos, error controlado e integración.
 5. **Markdown claro**: usar formato que el sistema de seguimiento renderice bien (encabezados, listas, negritas).
-6. **Idioma**: comunicación con el usuario en español. El resumen para el ticket puede estar en español o inglés según la convención del equipo; si no se sabe, usar español.
+6. **Idioma**: la comunicación con el usuario debe ser en el idioma en que se solicite la tarea. El resumen para el ticket puede estar en español o inglés según la convención del equipo.
 7. **No reintentar publicación sin autorización**: si falla la publicación, entregar el texto al usuario.
 8. **No commitear ni pushear**: el cierre es informativo; la acción final queda en manos del usuario.
 9. **No ignorar errores**: si falla la publicación en el sistema de seguimiento, reportarlo y ofrecer la alternativa manual.

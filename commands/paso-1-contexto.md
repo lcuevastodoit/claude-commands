@@ -139,7 +139,7 @@ Al finalizar la investigación, presentar un resumen estructurado:
 ## Reglas
 
 1. **Solo investigar**: no crear, editar ni borrar archivos, ni ejecutar migraciones o tests destructivos.
-2. **Idioma**: responder siempre en español.
+2. **Idioma**: responder en el idioma en que se solicite la tarea (español o inglés).
 3. **No bloquear**: si un paso no aplica o falla, continuar con los demás.
 4. **Preferir herramientas MCP** para el sistema de tickets y la plataforma de control de versiones cuando sea posible.
 5. **No ignorar errores en silencio**: si una herramienta falla, reportarlo en el resumen.

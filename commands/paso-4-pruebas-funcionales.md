@@ -176,7 +176,7 @@ Cuando el usuario reporte que las pruebas funcionales pasan:
 3. **Correcciones dentro del mismo paso**: si el usuario pide un fix, log o ajuste, aplicarlo aquí y no delegar a otro comando.
 4. **Actualizar tests unitarios**: cualquier descubrimiento funcional nuevo debe reflejarse en la suite unitaria.
 5. **No dejar logs de debugging**: antes de cerrar, eliminar `console.log`, `puts`, `debugger`, `Rails.logger.debug` temporales, etc.
-6. **Idioma del código**: todo código en **inglés**. Comunicación con el usuario en español.
+6. **Idioma**: el código debe estar en **inglés**. La comunicación con el usuario debe ser en el idioma en que se solicite la tarea.
 7. **Un cambio a la vez**: si hay múltiples correcciones, abordarlas una por una, mostrando diff y justificación.
 8. **Suite completa tras correcciones**: cada corrección significativa debe terminar con la suite del proyecto en GREEN.
 9. **No ignorar errores**: si un comando, test o prueba funcional falla, reportarlo y pedir decisión.

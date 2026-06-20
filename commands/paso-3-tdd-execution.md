@@ -97,7 +97,7 @@ Una vez todos los test cases creados en `paso-2-plan-gherkin` pasen en GREEN:
 1. **Un test case a la vez**: nunca implementar dos tests simultáneamente. Cada ciclo debe ser atómico.
 2. **RED confirmado**: siempre ejecutar el test antes de escribir código y verificar que falla por la razón esperada.
 3. **Mínimo código para GREEN**: no adelantar funcionalidad futura. Resolver solo lo que el test actual exige.
-4. **Idioma del código**: todo el código de implementación en **inglés**.
+4. **Idioma del código**: todo el código de implementación en **inglés**. La comunicación con el usuario debe ser en el idioma en que se solicite la tarea.
 5. **Sin comentarios inline**: el nombre de métodos, variables y tests debe ser suficientemente descriptivo.
 6. **Aprobación humana entre tests**: el usuario controla el ritmo. Nunca saltar al siguiente test sin su OK.
 7. **Diff obligatorio después de GREEN**: cada iteración termina mostrando el diff y una explicación técnica.

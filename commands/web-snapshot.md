@@ -1,70 +1,70 @@
 # /web-snapshot
 
-Captura y analiza cualquier página web usando Chrome DevTools MCP + Playwright. Ideal para obtener datos de sitios con Shadow DOM, JavaScript dinámico o protecciones anti-scraping.
+Captures and analyzes any web page using Chrome DevTools MCP + Playwright. Ideal for obtaining data from sites with Shadow DOM, dynamic JavaScript, or anti-scraping protections.
 
-## Cuándo usarlo
+## When to Use It
 
-- Sitios con contenido cargado dinámicamente con JavaScript
-- Páginas que usan Shadow DOM (como marca.com)
-- Cuando las APIs tradicionales fallan o requieren autenticación
-- Para obtener una "foto" completa del estado actual de una página
-- **Cuando necesitas extraer datos específicos** (precios, resultados, noticias, etc.)
+- Sites with content loaded dynamically with JavaScript
+- Pages that use Shadow DOM (like marca.com)
+- When traditional APIs fail or require authentication
+- To get a complete "photo" of the current page state
+- **When you need to extract specific data** (prices, results, news, etc.)
 
-## ⚙️ Requerimientos Técnicos
+## ⚙️ Technical Requirements
 
-### Dependencias necesarias
+### Required Dependencies
 
-| Componente | Versión | Propósito |
-|------------|---------|-----------|
-| **Node.js** | ≥ 16.x | Ejecutar scripts de Playwright |
-| **Playwright** | Última | Lanzar Chrome con `--remote-debugging-port=9222` |
-| **Chrome DevTools MCP** | Configurado | Conectarse al Chrome remoto y ejecutar comandos |
+| Component | Version | Purpose |
+|-----------|---------|---------|
+| **Node.js** | ≥ 16.x | Run Playwright scripts |
+| **Playwright** | Latest | Launch Chrome with `--remote-debugging-port=9222` |
+| **Chrome DevTools MCP** | Configured | Connect to remote Chrome and execute commands |
 
-### Instalación de dependencias
+### Installing Dependencies
 
 ```bash
-# Instalar Playwright globalmente
+# Install Playwright globally
 npm install -g playwright
 
-# O en el proyecto
+# Or in the project
 npm install playwright
 
-# Instalar browsers de Playwright
+# Install Playwright browsers
 npx playwright install chromium
 ```
 
-### Configuración del entorno
+### Environment Configuration
 
-**Paso 1:** Verificar que Chrome DevTools MCP esté disponible
-- El MCP debe estar configurado en Claude Code
-- Puerto por defecto: `9222`
+**Step 1:** Verify that Chrome DevTools MCP is available
+- The MCP must be configured in Claude Code
+- Default port: `9222`
 
-**Paso 2:** Verificar conexión
+**Step 2:** Verify connection
 ```bash
-# Chrome debe estar corriendo con remote debugging
-lsof -i :9222  # Verificar que el puerto esté en uso
+# Chrome must be running with remote debugging
+lsof -i :9222  # Verify that the port is in use
 ```
 
-### Arquitectura del sistema
+### System Architecture
 
 ```
 ┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
-│   Usuario       │────▶│  Claude Code     │────▶│  Chrome DevTools│
+│   User          │────▶│  Claude Code     │────▶│  Chrome DevTools│
 │   /web-snapshot │     │  Skill           │     │  MCP            │
 └─────────────────┘     └──────────────────┘     └────────┬────────┘
                               │                          │
-                              │  Lanza (si no existe)    │
+                              │  Launches (if none exists)│
                               ▼                          │
                         ┌──────────────────┐            │
                         │  Playwright      │────────────▶
-                        │  Chromium        │   Conexión CDP
+                        │  Chromium        │   CDP Connection
                         │  --remote-debug  │
                         └──────────────────┘
 ```
 
-### Comando de lanzamiento automático
+### Automatic Launch Command
 
-Si Chrome no está corriendo, el comando ejecuta:
+If Chrome is not running, the command executes:
 
 ```bash
 node -e "
@@ -77,24 +77,24 @@ const { chromium } = require('playwright');
   const page = await browser.newPage();
   await page.goto('about:blank');
   console.log('Chrome ready on port 9222');
-  await new Promise(() => {});  // Mantiene vivo
+  await new Promise(() => {});  // Keeps alive
 })();
 "
 ```
 
-### Variables de entorno
+### Environment Variables
 
-| Variable | Descripción | Default |
+| Variable | Description | Default |
 |----------|-------------|---------|
-| `CHROME_DEBUG_PORT` | Puerto para remote debugging | 9222 |
-| `PLAYWRIGHT_BROWSERS_PATH` | Ruta a browsers de Playwright | Auto-detect |
+| `CHROME_DEBUG_PORT` | Port for remote debugging | 9222 |
+| `PLAYWRIGHT_BROWSERS_PATH` | Path to Playwright browsers | Auto-detect |
 
-### Solución de problemas comunes
+### Troubleshooting Common Issues
 
 **Error: "Cannot connect to Chrome DevTools"**
-- Verificar que Chrome esté corriendo: `lsof -i :9222`
-- Si no está corriendo, se lanzará automáticamente
-- Verificar que Playwright esté instalado: `npm list -g playwright`
+- Verify that Chrome is running: `lsof -i :9222`
+- If not running, it will launch automatically
+- Verify that Playwright is installed: `npm list -g playwright`
 
 **Error: "Playwright not found"**
 ```bash
@@ -103,235 +103,241 @@ npx playwright install chromium
 ```
 
 **Error: "Screenshot failed"**
-- Verificar permisos de escritura en el directorio
-- Cambiar ruta de salida si es necesario
+- Verify write permissions in the directory
+- Change output path if necessary
 
-**La página no carga completamente**
-- Aumentar el parámetro `wait` (default: 5s)
-- Ejemplo: `wait=10` para esperar 10 segundos
+**The page doesn't load completely**
+- Increase the `wait` parameter (default: 5s)
+- Example: `wait=10` to wait 10 seconds
 
-### Requisitos de sistema
+### System Requirements
 
-| Recurso | Mínimo | Recomendado |
-|---------|--------|-------------|
+| Resource | Minimum | Recommended |
+|----------|---------|-------------|
 | RAM | 4 GB | 8 GB |
-| Disco | 500 MB | 2 GB (para browsers) |
-| Red | Conexión estable | Alta velocidad |
+| Disk | 500 MB | 2 GB (for browsers) |
+| Network | Stable connection | High speed |
 
-### Compatibilidad
+### Compatibility
 
-| Sistema | Soporte | Notas |
-|---------|---------|-------|
-| macOS | ✅ | Nativo con Playwright |
-| Linux | ✅ | Requiere dependencias del sistema |
-| Windows | ✅ | WSL recomendado |
+| System | Support | Notes |
+|----------|---------|-------|
+| macOS | ✅ | Native with Playwright |
+| Linux | ✅ | Requires system dependencies |
+| Windows | ✅ | WSL recommended |
 
-### Prueba de funcionamiento
+### Functionality Test
 
-Para verificar que todo está configurado correctamente:
-
-```bash
-/web-snapshot url="https://example.com" goal="título de la página"
-```
-
-Si obtienes el título sin errores, el sistema está funcionando correctamente.
-
-## Parámetros
-
-- `url` (requerido) - La URL a visitar
-- `goal` (opcional pero recomendado) - **Descripción de QUÉ extraer**. Ejemplos:
-  - `goal="resultados de partidos de fútbol con equipos y marcadores"`
-  - `goal="precios de productos en la lista"`
-  - `goal="titulares de noticias principales"`
-  - `goal="tabla de clasificación con posiciones y puntos"`
-- `wait` (opcional) - Segundos a esperar para carga dinámica (default: 5)
-- `extract` (opcional) - Formato de salida: `text`, `structured`, `screenshot`, `all` (default: `all`)
-- `cookies` (opcional) - Si es `true`, acepta automáticamente banners de cookies (default: `true`)
-
-## Ejemplos de uso
+To verify that everything is configured correctly:
 
 ```bash
-# Extraer resultados deportivos
-/web-snapshot url="https://www.marca.com/resultados/futbol/mundial.html" goal="resultados de partidos con equipos, marcadores y estado"
-
-# Extraer precios de productos
-/web-snapshot url="https://ejemplo.com/tienda" goal="precios y nombres de los productos listados"
-
-# Obtener noticias principales
-/web-snapshot url="https://news.ycombinator.com" goal="titulares de las noticias principales con sus puntajes"
-
-# Datos estructurados específicos
-/web-snapshot url="https://ejemplo.com/datos" goal="tabla de datos con columnas Nombre, Valor, Fecha" wait=3
+/web-snapshot url="https://example.com" goal="page title"
 ```
 
-## 🔄 Uso con `/loop` para monitoreo continuo
+If you get the title without errors, the system is working correctly.
 
-Para ejecutar el comando periódicamente (ej: cada 2 minutos), usar `/loop`:
+## Parameters
 
-### Ejemplo 1: Monitoreo de resultados deportivos cada 2 minutos
+- `url` (required) - The URL to visit
+- `goal` (optional but recommended) - **Description of WHAT to extract**. Examples:
+  - `goal="football match results with teams and scores"`
+  - `goal="prices of products in the list"`
+  - `goal="main news headlines"`
+  - `goal="standings table with positions and points"`
+- `wait` (optional) - Seconds to wait for dynamic loading (default: 5)
+- `extract` (optional) - Output format: `text`, `structured`, `screenshot`, `all` (default: `all`)
+- `cookies` (optional) - If `true`, automatically accepts cookie banners (default: `true`)
+
+## Usage Examples
 
 ```bash
-/loop 2m /web-snapshot url="https://www.marca.com/resultados/futbol/mundial.html" goal="resultados de partidos con equipos, marcadores y estado"
+# Extract sports results
+/web-snapshot url="https://www.marca.com/resultados/futbol/mundial.html" goal="match results with teams, scores, and status"
+
+# Extract product prices
+/web-snapshot url="https://example.com/store" goal="prices and names of listed products"
+
+# Get main news
+/web-snapshot url="https://news.ycombinator.com" goal="headlines of main news with their scores"
+
+# Specific structured data
+/web-snapshot url="https://example.com/data" goal="data table with columns Name, Value, Date" wait=3
 ```
 
-**Qué hace:**
-- Ejecuta `/web-snapshot` cada 2 minutos
-- Extrae resultados actualizados automáticamente
-- El loop se autoregenera hasta que canceles
+## 🔄 Usage with `/loop` for Continuous Monitoring
 
-### Ejemplo 2: Monitoreo de precios con autoregeneración
+To execute the command periodically (e.g., every 2 minutes), use `/loop`:
+
+### Example 1: Monitor sports results every 2 minutes
 
 ```bash
-/loop 5m /web-snapshot url="https://ejemplo.com/producto" goal="precio actual del producto"
+/loop 2m /web-snapshot url="https://www.marca.com/resultados/futbol/mundial.html" goal="match results with teams, scores, and status"
 ```
 
-### Ejemplo 3: Modo dinámico (sin intervalo fijo)
+**What it does:**
+- Executes `/web-snapshot` every 2 minutes
+- Extracts updated results automatically
+- The loop self-regenerates until you cancel it
+
+### Example 2: Price monitoring with self-regeneration
 
 ```bash
-/loop /web-snapshot url="https://www.marca.com/futbol/mundial/calendario/dieciseisavos.html" goal="equipos clasificados"
+/loop 5m /web-snapshot url="https://example.com/product" goal="current product price"
 ```
 
-**Nota:** En modo dinámico, elige el delay más apropiado (recomendado: 120s para monitoreo).
+### Example 3: Dynamic mode (no fixed interval)
 
-### Cómo funciona la autoregeneración
-
-Cuando usas `/loop`:
-1. Ejecuta el comando inmediatamente
-2. Programa la siguiente ejecución según el intervalo
-3. Se autoregenera automáticamente
-4. Para detener: omite el `ScheduleWakeup` en la siguiente iteración o cierra la sesión
-
-### Recomendaciones para loops
-
-| Caso de uso | Intervalo recomendado | Ejemplo |
-|-------------|----------------------|---------|
-| Resultados deportivos en vivo | 2m | `/loop 2m /web-snapshot ...` |
-| Precios de productos | 5-10m | `/loop 5m /web-snapshot ...` |
-| Noticias | 10-15m | `/loop 10m /web-snapshot ...` |
-| Monitorización general | 30m-1h | `/loop 30m /web-snapshot ...` |
-
-**⚠️ Importante:** Los loops en sesión local se detienen al cerrar Claude Code. Para loops persistentes en la nube, usar `/schedule` en lugar de `/loop`.
-
-## Qué hace internamente
-
-1. **Verifica requerimientos** - Comprueba que Playwright y Chrome DevTools MCP están disponibles
-2. **Lanza Chrome si es necesario** - Usa Playwright para iniciar Chrome con remote debugging
-3. **Navega** a la URL usando Chrome DevTools MCP
-4. **Acepta cookies** si aparece un banner (configurable)
-5. **Espera** el tiempo especificado para carga dinámica
-6. **Toma screenshot** para análisis visual
-7. **Extrae el accessibility tree** completo de la página
-8. **Analiza según el GOAL** - Busca específicamente los datos descritos en el parámetro `goal`
-9. **Presenta resultados** enfocados en lo solicitado
-10. **Limpia** archivos temporales
-
-## Ventajas del parámetro GOAL
-
-- 🎯 **Extracción enfocada** - No devuelve todo, solo lo que necesitas
-- 🧠 **Análisis inteligente** - Claude interpreta el goal y busca patrones relevantes
-- 📊 **Formato adecuado** - Presenta los datos de forma útil (tablas, listas, etc.)
-- ⏱️ **Eficiente** - Evita procesar información irrelevante
-
-## Ejemplos de GOAL efectivos
-
-| Tipo de página | GOAL sugerido |
-|---------------|----------------|
-| Resultados deportivos | `"partidos del día: equipos locales, visitantes, marcadores y estado (finalizado/en curso)"` |
-| Tienda online | `"productos en oferta: nombre, precio actual, precio anterior, descuento"` |
-| Noticias | `"titulares principales, resumen breve y hora de publicación"` |
-| Redes sociales | `"posts recientes: autor, contenido, likes, comentarios"` |
-| Dashboard | `"métricas principales: nombre del indicador y valor numérico"` |
-| Clasificación | `"tabla de posiciones: posición, equipo, puntos, partidos jugados"` |
-
-## Ventajas sobre scraping tradicional
-
-- ✅ Sin problemas de CORS
-- ✅ Renderiza JavaScript completo (React, Angular, Vue, etc.)
-- ✅ Accede a Shadow DOM y Web Components
-- ✅ Maneja banners de cookies automáticamente
-- ✅ Obtiene el estado "visual" real de la página
-- ✅ No requiere APIs ni tokens de autenticación
-- ✅ Funciona con protecciones Cloudflare y similares
-- ✅ **Extracción semántica** - entiende el contexto, no solo el HTML
-
-## Limitaciones
-
-- Requiere Chrome DevTools MCP configurado
-- Necesita Chrome corriendo con `--remote-debugging-port=9222` (se maneja automáticamente)
-- Más lento que una petición HTTP simple (pero más completo)
-- Depende de la claridad del `goal` para resultados óptimos
-- Consumo de recursos más alto (requiere Chrome completo)
-
-## Flujo técnico
-
-```
-Usuario → /web-snapshot url=... goal="..." 
-  → Verifica requerimientos → Lanza Chrome si es necesario
-    → MCP se conecta → Navega → Espera 
-      → Screenshot + Accessibility Tree → Análisis con GOAL 
-        → Extracción enfocada → Resultados estructurados
+```bash
+/loop /web-snapshot url="https://www.marca.com/futbol/mundial/calendario/dieciseisavos.html" goal="qualified teams"
 ```
 
-## Casos de uso reales
+**Note:** In dynamic mode, it chooses the most appropriate delay (recommended: 120s for monitoring).
 
-- **Resultados deportivos** en tiempo real de cualquier sitio
-- **Precios de productos** que cargan dinámicamente
-- **Noticias** de sitios con paywalls suaves
-- **Datos de dashboards** que requieren login previo (si hay sesión activa)
-- **Monitorización** de cambios en páginas web
-- **Competencia** - seguimiento de precios de competidores
-- **Research** - extracción de datos para análisis
+### How Self-Regeneration Works
 
-## Tip: Cómo escribir un buen GOAL
+When you use `/loop`:
+1. Executes the command immediately
+2. Schedules the next execution according to the interval
+3. Self-regenerates automatically
+4. To stop: omit the `ScheduleWakeup` in the next iteration or close the session
 
-1. **Sé específico**: `"precios de productos"` vs `"información"`
-2. **Menciona el formato**: `"tabla con..."`, `"lista de..."`, `"tarjetas con..."`
-3. **Incluye campos clave**: `"nombre, precio, disponibilidad"`
-4. **Contexto ayuda**: `"partidos de fútbol del Mundial 2026"` vs `"partidos"`
+### Recommendations for Loops
 
-## Si no se proporciona GOAL
+| Use Case | Recommended Interval | Example |
+|----------|---------------------|---------|
+| Live sports results | 2m | `/loop 2m /web-snapshot ...` |
+| Product prices | 5-10m | `/loop 5m /web-snapshot ...` |
+| News | 10-15m | `/loop 10m /web-snapshot ...` |
+| General monitoring | 30m-1h | `/loop 30m /web-snapshot ...` |
 
-El comando funcionará en modo genérico, extrayendo:
-- Título de la página
-- Descripción meta
-- Imágenes principales
-- Texto visible general
-- Estructura básica
+**⚠️ Important:** Loops in local session stop when Claude Code is closed. For persistent cloud loops, use `/schedule` instead of `/loop`.
 
-Pero **se recomienda siempre usar `goal`** para resultados óptimos.
+## What It Does Internally
 
-## Diagnóstico de errores
+1. **Verifies requirements** - Checks that Playwright and Chrome DevTools MCP are available
+2. **Launches Chrome if necessary** - Uses Playwright to start Chrome with remote debugging
+3. **Navigates** to the URL using Chrome DevTools MCP
+4. **Accepts cookies** if a banner appears (configurable)
+5. **Waits** the specified time for dynamic loading
+6. **Takes screenshot** for visual analysis
+7. **Extracts the complete accessibility tree** from the page
+8. **Analyzes according to GOAL** - Specifically looks for the data described in the `goal` parameter
+9. **Presents results** focused on what was requested
+10. **Cleans up** temporary files
+
+## Advantages of the GOAL Parameter
+
+- 🎯 **Focused extraction** - Doesn't return everything, only what you need
+- 🧠 **Intelligent analysis** - Claude interprets the goal and looks for relevant patterns
+- 📊 **Appropriate format** - Presents data in a useful way (tables, lists, etc.)
+- ⏱️ **Efficient** - Avoids processing irrelevant information
+
+## Examples of Effective GOALs
+
+| Page Type | Suggested GOAL |
+|-----------|----------------|
+| Sports results | `"today's matches: home teams, away teams, scores, and status (finished/in progress)"` |
+| Online store | `"products on offer: name, current price, previous price, discount"` |
+| News | `"main headlines, brief summary, and publication time"` |
+| Social networks | `"recent posts: author, content, likes, comments"` |
+| Dashboard | `"main metrics: indicator name and numeric value"` |
+| Standings | `"positions table: position, team, points, games played"` |
+
+## Advantages Over Traditional Scraping
+
+- ✅ No CORS issues
+- ✅ Renders complex JavaScript (React, Angular, Vue, etc.)
+- ✅ Accesses Shadow DOM and Web Components
+- ✅ Handles cookie banners automatically
+- ✅ Gets the real "visual" state of the page
+- ✅ Doesn't require APIs or authentication tokens
+- ✅ Works with Cloudflare and similar protections
+- ✅ **Semantic extraction** - understands context, not just HTML
+
+## Limitations
+
+- Requires configured Chrome DevTools MCP
+- Needs Chrome running with `--remote-debugging-port=9222` (handled automatically)
+- Slower than a simple HTTP request (but more complete)
+- Depends on GOAL clarity for optimal results
+- Higher resource consumption (requires full Chrome)
+
+## Technical Flow
+
+```
+User → /web-snapshot url=... goal="..." 
+  → Verifies requirements → Launches Chrome if necessary
+    → MCP connects → Navigates → Waits 
+      → Screenshot + Accessibility Tree → Analysis with GOAL 
+        → Focused extraction → Structured results
+```
+
+## Real Use Cases
+
+- **Live sports results** from any site
+- **Product prices** that load dynamically
+- **News** from sites with soft paywalls
+- **Dashboard data** that requires prior login (if there's active session)
+- **Page change monitoring**
+- **Competition** - competitor price tracking
+- **Research** - data extraction for analysis
+
+## Tip: How to Write a Good GOAL
+
+1. **Be specific**: `"product prices"` vs `"information"`
+2. **Mention format**: `"table with..."`, `"list of..."`, `"cards with..."`
+3. **Include key fields**: `"name, price, availability"`
+4. **Context helps**: `"2026 World Cup football matches"` vs `"matches"`
+
+## If GOAL is Not Provided
+
+The command will work in generic mode, extracting:
+- Page title
+- Meta description
+- Main images
+- General visible text
+- Basic structure
+
+But **it is always recommended to use `goal`** for optimal results.
+
+## Error Diagnosis
 
 ### Error Code: CONN_REFUSED
-**Causa:** Chrome no está corriendo en el puerto 9222  
-**Solución:** El comando intentará lanzar Chrome automáticamente. Si falla, ejecutar manualmente:
+**Cause:** Chrome is not running on port 9222  
+**Solution:** The command will try to launch Chrome automatically. If it fails, run manually:
 ```bash
 /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222
 ```
 
 ### Error Code: TIMEOUT
-**Causa:** La página tarda demasiado en cargar  
-**Solución:** Aumentar `wait` o verificar conectividad a internet
+**Cause:** The page takes too long to load  
+**Solution:** Increase `wait` or verify internet connectivity
 
 ### Error Code: PLAYWRIGHT_NOT_FOUND
-**Causa:** Playwright no está instalado  
-**Solución:** Verificar sección de instalación de dependencias
+**Cause:** Playwright is not installed  
+**Solution:** Check the dependencies installation section
 
 ### Error Code: SCREENSHOT_FAILED
-**Causa:** No hay permisos de escritura o ruta inválida  
-**Solución:** Verificar que la ruta de salida exista y tenga permisos
+**Cause:** No write permissions or invalid path  
+**Solution:** Verify that the output path exists and has permissions
 
-## Recursos adicionales
+## Additional Resources
 
-- [Documentación de Playwright](https://playwright.dev/)
+- [Playwright Documentation](https://playwright.dev/)
 - [Chrome DevTools Protocol](https://chromedevtools.github.io/devtools-protocol/)
 - [Claude Code MCP Docs](https://docs.anthropic.com/)
 
-## Mantenimiento
+## Rules
 
-Para mantener el comando funcionando correctamente:
+1. **Language**: respond in the language used to request the task (English or Spanish).
+2. **Chrome availability**: verify that Chrome with remote debugging is available before executing.
+3. **Respect user preferences**: honor user decisions on output format and parameters.
 
-1. **Actualizar Playwright** periódicamente: `npm update -g playwright`
-2. **Actualizar browsers**: `npx playwright install chromium`
-3. **Verificar logs** en `~/.claude/commands/web-snapshot-log.json`
-4. **Limpiar archivos temporales** si el disco se llena
+## Maintenance
+
+To keep the command working correctly:
+
+1. **Update Playwright** periodically: `npm update -g playwright`
+2. **Update browsers**: `npx playwright install chromium`
+3. **Check logs** in `~/.claude/commands/web-snapshot-log.json`
+4. **Clean temporary files** if disk fills up

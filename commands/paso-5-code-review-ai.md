@@ -210,7 +210,7 @@ Si el usuario aprueba correcciones:
 4. **Contexto del proyecto**: usar como referencia el estilo, helpers, patrones y reglas de linting del proyecto, no estándares genéricos.
 5. **Una corrección a la vez**: si hay varias, aplicarlas de forma ordenada, mostrando diff y justificación por cada una.
 6. **Tests unitarios siempre ajustados**: cualquier cambio que afecte comportamiento o estructura debe reflejarse en tests.
-7. **Idioma del código**: todo el código en inglés. Comunicación con el usuario en español.
+7. **Idioma**: el código debe estar en **inglés**. La comunicación con el usuario debe ser en el idioma en que se solicite la tarea.
 8. **Suite completa tras correcciones**: nunca terminar sin validar que todo sigue en GREEN.
 9. **No ignorar errores de linting o tests**: reportar y pedir decisión.
 10. **Respetar decisiones del usuario**: si el usuario prefiere no corregir algo, aceptarlo y documentar el motivo.
