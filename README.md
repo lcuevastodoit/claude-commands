@@ -4,6 +4,50 @@
 
 A collection of custom commands for [Claude Code](https://claude.ai/code) that automate software development workflows, web scraping, and quality assurance processes.
 
+### Why These Commands Exist
+
+**The Problem:** Every developer knows the pain...
+
+🔄 **Starting a task without context** → You spend hours digging through tickets, PRs, and documentation just to understand what needs to be done.
+
+📝 **Writing tests after coding** → You rush through test creation, missing edge cases and creating brittle tests that break with every refactor.
+
+🔴 **"Works on my machine"** → Code passes locally but fails in production because functional scenarios were never validated.
+
+🔍 **Code reviews that miss the big picture** → Reviews focus on syntax nitpicks while architectural issues and security risks slip through.
+
+📊 **No documentation, no traceability** → Weeks later, nobody remembers why decisions were made or how to test the feature.
+
+😰 **The Sunday night deploy anxiety** → Pushing code with a nervous feeling that something might break.
+
+---
+
+**The Solution:** A mindful, repeatable workflow that catches issues *before* they become problems.
+
+✅ **Start with clarity** → `/step-1-context` analyzes requirements, investigates tickets, finds similar code, and proposes a plan—giving you confidence before writing a single line.
+
+✅ **Tests first, always** → `/step-2-gherkin-plan` converts requirements into executable Gherkin specs and real test cases, so you know exactly what "done" looks like.
+
+✅ **TDD done right** → `/step-3-tdd-execution` guides you through RED → GREEN cycles with user approval at each step, ensuring every feature is tested and intentional.
+
+✅ **Validate reality** → `/step-4-functional-tests` provides concrete commands to verify your code works in real scenarios, not just in unit tests.
+
+✅ **Catch what others miss** → `/step-5-code-review` performs AI-assisted analysis checking DRY, security, performance, and patterns—finding issues humans often overlook.
+
+✅ **Finish with confidence** → `/step-6-conscious-closure` generates documentation, publishes summaries to tickets, and leaves clear testing instructions for reviewers.
+
+✅ **Extract any data** → `/web-snapshot` captures dynamic web content that traditional scraping can't touch, with support for continuous monitoring.
+
+---
+
+**What You Gain:**
+
+- 🧠 **Peace of mind** → Deploy knowing every scenario has been tested and validated  
+- ⏱️ **Time saved** → No more context-switching or figuring out "what was I doing?"
+- 🎯 **Quality by default** → Issues caught early, when they're cheap to fix
+- 📈 **Team confidence** → Clear documentation and test plans for every feature
+- 🔄 **Repeatable success** → Same high quality on every task, regardless of complexity
+
 ---
 
 ## Table of Contents
