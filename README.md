@@ -59,6 +59,14 @@ All commands respond in the language used to request the task (English or Spanis
 ### For Workflow Commands
 - Claude Code with MCP access
 - Project-specific dependencies (RSpec, Jest, etc.)
+- **Recommended MCPs** for full functionality:
+  - **Issue Tracking**: Jira, Azure DevOps, Linear, or similar
+  - **Version Control**: GitHub, GitLab, Bitbucket
+  - **Communication**: Slack, Discord (for notifications)
+  - **Documentation**: Confluence, Notion, local Handbook
+  - **Monitoring**: Sentry, DataDog (optional)
+
+> **Note:** Commands will work without these MCPs, but features like automatic ticket updates, MR/PR analysis, and team notifications may require manual steps.
 
 ### For Web Snapshot
 - Node.js ≥ 16.x
