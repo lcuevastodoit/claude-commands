@@ -79,6 +79,51 @@ All commands respond in the language used to request the task (English or Spanis
    /step-1-context Create a user authentication system
    ```
 
+## Usage Examples
+
+### Web Snapshot
+
+Capture and analyze web pages with specific data extraction goals.
+
+**Basic usage (single capture):**
+```
+/web-snapshot url="https://example.com/products" goal="product prices and names"
+```
+
+**Extract sports results:**
+```
+/web-snapshot url="https://sports-site.com/matches" goal="match results with teams, scores, and status"
+```
+
+**Get news headlines:**
+```
+/web-snapshot url="https://news.ycombinator.com" goal="headlines with scores and comment counts"
+```
+
+**Wait longer for dynamic content:**
+```
+/web-snapshot url="https://spa-app.com/dashboard" goal="metrics values" wait=10
+```
+
+**With /loop for continuous monitoring:**
+
+Monitor live sports results every 2 minutes:
+```
+/loop 2m /web-snapshot url="https://sports-site.com/live" goal="live match scores and time"
+```
+
+Track product prices every 5 minutes:
+```
+/loop 5m /web-snapshot url="https://store.com/product/123" goal="current price and availability"
+```
+
+Monitor news headlines every 10 minutes:
+```
+/loop 10m /web-snapshot url="https://news-site.com/headlines" goal="latest headlines and timestamps"
+```
+
+> **Note:** The `goal` parameter is essential for focused data extraction. Be specific about what you want to extract.
+
 ## Command Options
 
 ### Response Language
