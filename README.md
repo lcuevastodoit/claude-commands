@@ -13,6 +13,8 @@ A collection of custom commands for [Claude Code](https://claude.ai/code) that a
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Usage Examples](#usage-examples)
+- [Advanced Configuration](#advanced-configuration)
+  - [Using Ollama LLMs](#using-ollama-llms-with-claude-code)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -259,6 +261,97 @@ The 6-step workflow can be used:
 ├── step-6-conscious-closure.md    # Conscious task closure
 └── web-snapshot.md                # Web page capture and analysis
 ```
+
+---
+
+## Advanced Configuration
+
+### Using Ollama LLMs with Claude Code (optional)
+
+You can integrate local and cloud-based Ollama models with Claude Code for running these commands.
+
+#### Quick Start (Recommended)
+
+The easiest way to use Ollama with Claude Code:
+
+```bash
+# Launch Claude Code with Ollama (auto-configures everything)
+ollama launch claude
+
+# Or specify a model
+ollama launch claude -- --model llama3.2
+```
+
+This command automatically:
+- Starts the Ollama server
+- Configures Claude Code to use the specified model
+- Handles all connection settings
+
+#### Install Ollama
+
+If you haven't installed Ollama yet:
+
+```bash
+# macOS
+brew install ollama
+
+# Linux
+curl -fsSL https://ollama.com/install.sh | sh
+
+# Windows
+# Download from https://ollama.com/download
+```
+
+#### Using Local Models
+
+Pull models you want to use:
+
+```bash
+ollama pull llama3.3-70b:cloud
+ollama pull kimi-k2.7-code:cloud
+ollama pull qwen2.5-72b:cloud
+```
+
+# List available models
+ollama list
+```
+
+Then launch Claude Code:
+
+```bash
+ollama launch claude -- --model codellama
+```
+
+#### Using Cloud Models (Large Models)
+
+For very large models that require significant GPU resources, use Ollama Cloud with the `:cloud` suffix:
+
+```bash
+# Use large cloud models
+ollama launch claude -- --model llama3.3-70b:cloud
+ollama launch claude -- --model kimi-k2.7-code:cloud
+ollama launch claude -- --model qwen2.5-72b:cloud
+```
+
+**Syntax:** `model-name:cloud`
+
+Available models: [ollama.com/library](https://ollama.com/search)
+
+#### Troubleshooting
+
+**"ollama launch claude" not found:**
+- Update Ollama: `brew upgrade ollama` or reinstall
+- Or use manual setup: `ollama serve` then configure Claude Code settings
+
+**Model not found:**
+```bash
+ollama pull llama3.2
+```
+
+**Out of memory:**
+- Use cloud models: `model-name:cloud`
+- Use quantized versions: `llama3.2:q4_0`
+- Close other applications
 
 ---
 
