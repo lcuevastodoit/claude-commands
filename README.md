@@ -26,7 +26,7 @@ A collection of custom commands for [Claude Code](https://claude.ai/code) that a
 
 ✅ **Start with clarity** → `/step-1-context` analyzes requirements, investigates tickets, finds similar code, and proposes a plan—giving you confidence before writing a single line.
 
-✅ **Tests first, always** → `/step-2-gherkin-plan` converts requirements into executable Gherkin specs and real test cases, so you know exactly what "done" looks like.
+✅ **Tests first, always** → `/step-2-gherkin-plan` converts requirements into executable Gherkin specs—the human-readable contract—then transforms them into unit tests in your project's preferred stack (RSpec, Jest, pytest, etc.), so you know exactly what "done" looks like.
 
 ✅ **TDD done right** → `/step-3-tdd-execution` guides you through RED → GREEN cycles with user approval at each step, ensuring every feature is tested and intentional.
 
