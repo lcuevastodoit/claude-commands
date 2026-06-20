@@ -2,162 +2,300 @@
 
 # Claude Code Custom Commands
 
-This repository contains custom Claude Code commands for workflow automation, web scraping, and software development best practices.
+A collection of custom commands for [Claude Code](https://claude.ai/code) that automate software development workflows, web scraping, and quality assurance processes.
 
-## Installation
+---
 
-Copy or move the `commands/` folder (or its contents) into your Claude Code project at:
+## Table of Contents
 
-```
-.claude/commands/
-```
+- [Overview](#overview)
+- [Available Commands](#available-commands)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Usage Examples](#usage-examples)
+- [Contributing](#contributing)
+- [License](#license)
 
-After that, Claude Code will automatically discover and register the commands.
+---
 
-### Example Structure
+## Overview
 
-Your project should look like:
+This repository provides two categories of commands:
 
-```
-.claude/commands/
-├── step-1-context.md              # Context gathering
-├── step-2-gherkin-plan.md         # Gherkin test planning
-├── step-3-tdd-execution.md       # TDD execution cycle
-├── step-4-functional-tests.md    # Manual functional testing
-├── step-5-code-review.md          # AI-assisted code review
-├── step-6-conscious-closure.md    # Conscious task closure
-└── web-snapshot.md               # Web page capture and analysis
-```
+1. **Developer Workflow Process** - A structured 6-step development workflow for professional software engineering
+2. **Utility Commands** - Specialized tools for web scraping and data extraction
+
+All commands are designed to work with Claude Code's MCP (Model Context Protocol) system and adapt to your project's existing patterns and conventions.
+
+### Key Features
+
+- 🌐 **Multilingual**: Responds in the language you use (English or Spanish)
+- 🔧 **Project-Aware**: Adapts to your existing codebase patterns and conventions
+- 🧪 **Test-Driven**: Built-in support for TDD and comprehensive testing workflows
+- 🤖 **AI-Assisted**: Leverages Claude's capabilities for code review and analysis
+- 📝 **Documentation-Friendly**: Automatic generation of summaries and documentation
+
+---
 
 ## Available Commands
 
-### Workflow Commands (6-Step Process)
+### 1. Developer Workflow Process
 
-These commands implement a structured development workflow based on best practices:
+A complete 6-step development lifecycle that guides you from understanding a task to delivering production-ready code:
 
-| Command | Description |
-|---------|-------------|
-| `/step-1-context` | Gathers quick context about a task without executing changes. Analyzes the prompt, investigates tickets, searches for patterns, and proposes an action plan. |
-| `/step-2-gherkin-plan` | Converts requirements into Gherkin specifications following Cucumber standards. Creates executable test plans and generates real test cases (RSpec/Jest) after user approval. |
-| `/step-3-tdd-execution` | Executes strict TDD cycle (RED → GREEN) one test at a time. Pauses between iterations for user approval and explanation of technical decisions. |
-| `/step-4-functional-tests` | Guides manual functional testing with concrete commands (curl, console, browser). Applies fixes and updates unit tests based on findings. |
-| `/step-5-code-review` | Performs AI-assisted code review checking DRY principles, security, performance, and linting. Reports findings without auto-applying changes. |
-| `/step-6-conscious-closure` | Generates executive summary of changes, publishes to ticket tracking system, and provides 5 manual testing suggestions for reviewers. |
+| Step | Command | Purpose |
+|:----:|:--------|:--------|
+| 1 | `/step-1-context` | **Context Gathering** - Analyze requirements, investigate tickets, find patterns, and propose an action plan without executing changes |
+| 2 | `/step-2-gherkin-plan` | **Test Planning** - Convert requirements into Gherkin specifications and generate test cases (RSpec/Jest) after approval |
+| 3 | `/step-3-tdd-execution` | **TDD Implementation** - Execute strict RED → GREEN cycle, one test at a time, with user approval at each step |
+| 4 | `/step-4-functional-tests` | **Manual Validation** - Guide functional testing with concrete commands (curl, console, browser) and apply fixes |
+| 5 | `/step-5-code-review` | **Code Review** - AI-assisted review checking DRY, security, performance, and linting - reports only, no auto-changes |
+| 6 | `/step-6-conscious-closure` | **Task Closure** - Generate executive summary, publish to ticket system, and provide testing instructions |
 
-### Utility Commands
+### 2. Utility Commands
 
-| Command | Description |
-|---------|-------------|
-| `/web-snapshot` | Captures and analyzes web pages using Chrome DevTools MCP + Playwright. Ideal for sites with Shadow DOM, dynamic JavaScript, or anti-scraping protections. Supports continuous monitoring with `/loop`. |
+| Command | Purpose |
+|:--------|:--------|
+| `/web-snapshot` | **Web Scraping** - Capture and analyze web pages using Chrome DevTools MCP + Playwright. Ideal for dynamic JavaScript, Shadow DOM, and anti-scraping protections. Supports continuous monitoring with `/loop` |
 
-## Language Support
-
-All commands respond in the language used to request the task (English or Spanish). Implementation code is always in English following SOLID and DRY principles.
+---
 
 ## Requirements
 
-### For Workflow Commands
-- Claude Code with MCP access
-- Project-specific dependencies (RSpec, Jest, etc.)
-- **Recommended MCPs** for full functionality:
-  - **Issue Tracking**: Jira, Azure DevOps, Linear, or similar
-  - **Version Control**: GitHub, GitLab, Bitbucket
-  - **Communication**: Slack, Discord (for notifications)
-  - **Documentation**: Confluence, Notion, local Handbook
-  - **Monitoring**: Sentry, DataDog (optional)
+### Prerequisites for All Commands
 
-> **Note:** Commands will work without these MCPs, but features like automatic ticket updates, MR/PR analysis, and team notifications may require manual steps.
+- [Claude Code](https://claude.ai/code) installed and configured
+- Access to Claude Code's MCP system
 
-### For Web Snapshot
+### Developer Workflow Commands
+
+**Required:**
+- Project-specific testing frameworks (RSpec, Jest, pytest, etc.)
+- Git repository (for tracking changes)
+
+**Recommended MCPs for Full Functionality:**
+
+| Category | MCPs | Purpose |
+|:---------|:-----|:--------|
+| Issue Tracking | Jira, Azure DevOps, Linear | Fetch ticket details, update status, post comments |
+| Version Control | GitHub, GitLab, Bitbucket | Analyze MRs/PRs, check related changes |
+| Communication | Slack, Discord | Notify team about progress |
+| Documentation | Confluence, Notion | Link to relevant docs |
+| Monitoring | Sentry, DataDog | Check error context (optional) |
+
+> **Note:** Commands work without these MCPs, but features like automatic ticket updates and PR analysis will require manual steps.
+
+### Web Snapshot Command
+
+**Required:**
 - Node.js ≥ 16.x
-- Playwright (`npm install -g playwright`)
+- Playwright: `npm install -g playwright`
 - Chrome DevTools MCP configured
-- Chrome with remote debugging port 9222
-- **LLM with vision capabilities** (local or cloud) - Required for analyzing screenshots and extracting visual data from web pages
+- Chrome running with remote debugging: `--remote-debugging-port=9222`
+- **LLM with vision capabilities** (local or cloud) - for analyzing screenshots
 
-## Quick Start
+**Installation:**
+```bash
+npm install -g playwright
+npx playwright install chromium
+```
 
-1. Copy the commands to your project:
-   ```bash
-   cp -r commands/ /your/project/.claude/
-   ```
+---
 
-2. Start using commands in Claude Code:
-   ```
-   /step-1-context Create a user authentication system
-   ```
+## Installation
+
+### Option 1: Copy to Project (Recommended)
+
+Copy the `commands/` folder to your project's Claude Code directory:
+
+```bash
+cp -r commands/ /your/project/.claude/
+```
+
+### Option 2: Clone as Submodule
+
+Add this repository as a submodule to your project:
+
+```bash
+git submodule add https://github.com/your-repo/claude-code-commands.git .claude/commands
+```
+
+### Option 3: Global Installation
+
+For use across multiple projects, copy to Claude Code's global commands directory.
+
+### Verification
+
+After installation, verify commands are available:
+
+```
+/commands
+```
+
+You should see the list of available commands.
+
+---
 
 ## Usage Examples
 
-### Web Snapshot
+### Developer Workflow Example
 
-Capture and analyze web pages with specific data extraction goals.
+Complete workflow from task to delivery:
 
-**Basic usage (single capture):**
+```
+# Step 1: Understand the task
+/step-1-context Implement user authentication with OAuth2
+
+# Step 2: Define test scenarios  
+/step-2-gherkin-plan
+
+# Step 3: Implement with TDD
+/step-3-tdd-execution
+
+# Step 4: Validate manually
+/step-4-functional-tests
+
+# Step 5: Review quality
+/step-5-code-review
+
+# Step 6: Close and document
+/step-6-conscious-closure
+```
+
+### Web Snapshot Examples
+
+**Single capture:**
 ```
 /web-snapshot url="https://example.com/products" goal="product prices and names"
 ```
 
-**Extract sports results:**
+**Extract specific data:**
 ```
 /web-snapshot url="https://sports-site.com/matches" goal="match results with teams, scores, and status"
 ```
 
-**Get news headlines:**
-```
-/web-snapshot url="https://news.ycombinator.com" goal="headlines with scores and comment counts"
-```
-
-**Wait longer for dynamic content:**
+**Wait for dynamic content:**
 ```
 /web-snapshot url="https://spa-app.com/dashboard" goal="metrics values" wait=10
 ```
 
-**With /loop for continuous monitoring:**
+**Continuous monitoring with /loop:**
 
-Monitor live sports results every 2 minutes:
 ```
+# Monitor live sports every 2 minutes
 /loop 2m /web-snapshot url="https://sports-site.com/live" goal="live match scores and time"
-```
 
-Track product prices every 5 minutes:
-```
+# Track product prices every 5 minutes
 /loop 5m /web-snapshot url="https://store.com/product/123" goal="current price and availability"
-```
 
-Monitor news headlines every 10 minutes:
-```
+# Monitor news headlines every 10 minutes
 /loop 10m /web-snapshot url="https://news-site.com/headlines" goal="latest headlines and timestamps"
 ```
 
-> **Note:** The `goal` parameter is essential for focused data extraction. Be specific about what you want to extract.
+> **Tip:** The `goal` parameter is essential for focused data extraction. Be specific about what you want.
 
-## Command Options
+---
 
-### Response Language
-All commands detect the language of your request and respond accordingly. Code implementation is always in English.
+## Command Features
+
+### Language Support
+
+All commands automatically detect your request language and respond accordingly:
+- **Communication**: English or Spanish based on your input
+- **Code**: Always in English (following best practices)
+- **Documentation**: Matches your request language
 
 ### Workflow Integration
-The 6-step commands can be used individually or as a complete development cycle:
+
+The 6-step workflow can be used:
+- **Individually**: Use only the steps you need
+- **Sequentially**: Run the complete development cycle
+- **Iteratively**: Repeat steps as needed
+
+**Visual workflow:**
 
 ```
-/step-1-context     → Understand the task
-/step-2-gherkin-plan → Define test scenarios
-/step-3-tdd-execution → Implement with TDD
-/step-4-functional-tests → Validate manually
-/step-5-code-review    → Review quality
-/step-6-conscious-closure → Close and document
+┌─────────────────────────────────────────────────────────────┐
+│                    DEVELOPMENT WORKFLOW                    │
+├─────────────┐    ┌─────────────┐    ┌─────────────────────┤
+│   step-1    │───▶│   step-2    │───▶│      step-3         │
+│   Context   │    │    Plan     │    │    TDD Exec         │
+│ Understanding│   │   (Gherkin) │    │   (RED/GREEN)       │
+└─────────────┘    └─────────────┘    └─────────────────────┘
+                                              │
+┌─────────────┐    ┌─────────────┐           │
+│   step-6    │◀───│   step-5    │◀──────────┘
+│   Closure   │    │Code Review  │
+│  (Summary)  │    │ (AI Assisted)│
+└─────────────┘    └─────────────┘
+       ▲
+       │
+┌──────────────────────┐
+│      step-4          │
+│   Functional Tests   │
+│   (Manual QA)        │
+└──────────────────────┘
 ```
+
+### Best Practices Enforced
+
+- ✅ **SOLID Principles**: Single responsibility, open/closed, etc.
+- ✅ **DRY**: Don't Repeat Yourself - code reuse encouraged
+- ✅ **Test Coverage**: RED/GREEN cycles ensure testability
+- ✅ **Code Quality**: Automated linting and review processes
+- ✅ **Documentation**: Automatic summary generation
+
+---
+
+## Project Structure
+
+```
+.claude/commands/
+├── step-1-context.md              # Context gathering
+├── step-2-gherkin-plan.md         # Gherkin test planning  
+├── step-3-tdd-execution.md        # TDD execution cycle
+├── step-4-functional-tests.md     # Manual functional testing
+├── step-5-code-review.md          # AI-assisted code review
+├── step-6-conscious-closure.md    # Conscious task closure
+└── web-snapshot.md                # Web page capture and analysis
+```
+
+---
 
 ## Contributing
 
-When creating new commands:
-1. Follow the existing structure with clear sections
-2. Include preconditions, phases, and rules
-3. Specify language behavior (respond in request language)
-4. Document parameters and examples
-5. Update this README
+We welcome contributions! When creating new commands:
+
+1. **Structure**: Follow the existing format with clear sections
+2. **Preconditions**: Document what must be true before running
+3. **Phases**: Break down into logical execution phases
+4. **Rules**: Define clear behavior guidelines
+5. **Language**: Support multilingual responses
+6. **Documentation**: Update this README with examples
+
+### Submitting Changes
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/my-command`
+3. Commit your changes: `git commit -am 'Add new command'`
+4. Push to the branch: `git push origin feature/my-command`
+5. Submit a pull request
+
+---
 
 ## License
 
 These commands are provided as-is for use with Claude Code.
+
+---
+
+## Support
+
+For issues, questions, or feature requests:
+- Open an issue in this repository
+- Refer to [Claude Code documentation](https://docs.anthropic.com/)
+- Check command-specific documentation in each `.md` file
+
+---
+
+**Happy coding!** 🚀
