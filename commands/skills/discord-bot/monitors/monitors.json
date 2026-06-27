@@ -1,0 +1,8 @@
+[
+  {
+    "name": "discord-bot-status",
+    "command": "${CLAUDE_PLUGIN_ROOT}/bin/monitor-bot.sh",
+    "description": "Monitor Discord bot status and restart if needed",
+    "when": "always"
+  }
+]

@@ -1,0 +1,51 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[Discord Bot] Starting bot...' && cd CLAUDE_SKILL_DIR && node bot.js status > /dev/null 2>&1 || (nohup node bot.js start > bot.log 2>&1 &)"
+          },
+          {
+            "type": "command",
+            "command": "echo '[Discord Bot] Starting message monitor in 3s...' && sleep 3 && CLAUDE_SKILL_DIR/bin/start-message-monitor.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[Discord Bot] Resuming session...' && cd CLAUDE_SKILL_DIR && node bot.js status > /dev/null 2>&1 || (nohup node bot.js start > bot.log 2>&1 &)"
+          },
+          {
+            "type": "command",
+            "command": "sleep 3 && CLAUDE_SKILL_DIR/bin/start-message-monitor.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "clear",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "CLAUDE_SKILL_DIR/bin/check-status.sh"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "CLAUDE_SKILL_DIR/bin/check-status.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

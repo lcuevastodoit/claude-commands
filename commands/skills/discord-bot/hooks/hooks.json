@@ -1,0 +1,51 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/bin/start-bot.sh"
+          },
+          {
+            "type": "command",
+            "command": "sleep 2 && ${CLAUDE_PLUGIN_ROOT}/bin/start-message-monitor.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/bin/start-bot.sh"
+          },
+          {
+            "type": "command",
+            "command": "sleep 2 && ${CLAUDE_PLUGIN_ROOT}/bin/start-message-monitor.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "clear",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/bin/check-status.sh"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/bin/check-status.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

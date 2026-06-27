@@ -1,0 +1,10 @@
+{
+  "name": "discord-bot-gateway",
+  "description": "Discord bot with WebSocket Gateway for real-time bidirectional communication. Auto-starts on session startup and maintains persistent connection.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Claude Code"
+  },
+  "homepage": "https://github.com/yourusername/discord-bot-gateway",
+  "license": "MIT"
+}

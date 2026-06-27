@@ -1,0 +1,34 @@
+{
+  "name": "discord-bot-gateway",
+  "version": "1.0.0",
+  "description": "Discord bot with WebSocket Gateway for real-time bidirectional communication",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js start",
+    "status": "node bot.js status",
+    "test": "node test.js",
+    "install-skill": "node install.js",
+    "send": "node send.js",
+    "read": "node read.js",
+    "messages": "node bot.js messages"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "gateway",
+    "websocket",
+    "real-time",
+    "claude-code",
+    "skill"
+  ],
+  "author": "Claude Code",
+  "license": "MIT",
+  "type": "commonjs",
+  "dependencies": {
+    "discord.js": "^14.26.4",
+    "dotenv": "^17.4.2"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
