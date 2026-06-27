@@ -104,28 +104,32 @@ A complete 6-step development lifecycle that guides you from understanding a tas
 |:--------|:--------|
 | `/web-snapshot` | **Web Scraping** - Capture and analyze web pages using Chrome DevTools MCP + Playwright. Ideal for dynamic JavaScript, Shadow DOM, and anti-scraping protections. Supports continuous monitoring with `/loop` |
 
-### 3. Discord Bot Gateway Plugin
+### 3. Discord Bot Gateway Skill
 
 Real-time Discord integration with bidirectional communication:
 
 | Component | Purpose |
 |:----------|:--------|
-| `discord-bot-gateway` | **Real-time Bot** - WebSocket Gateway connection, automatic message monitoring, Claude receives instant notifications and can respond to Discord messages live |
+| `/iniciar-discord-bot` | **Real-time Bot** - WebSocket Gateway connection, automatic message monitoring, Claude receives instant notifications and can respond to Discord messages live |
 
-**Location:** `plugins/discord-bot/`  
+**Location:** `skills/discord-bot/`  
 **Features:**
 - ✅ Always online status in Discord
 - ✅ Real-time message notifications to Claude
 - ✅ Bidirectional communication (send and receive)
-- ✅ Auto-start with Claude Code sessions
+- ✅ Manual start with `/iniciar-discord-bot` command
 
 **Quick Install:**
 ```bash
-cd plugin
-node install.js
+cd skills/discord-bot
+npm install
 ```
 
-**Documentation:** See `plugins/discord-bot/README.md`
+**Configuration:**
+1. Create `~/.discord-config.json` with your bot token
+2. Run `/iniciar-discord-bot` to start
+
+**Documentation:** See `skills/discord-bot/README.md` and `skills/discord-bot/COMMAND.md`
 
 ---
 
@@ -175,10 +179,14 @@ npx playwright install chromium
 
 ### Option 1: Copy to Project (Recommended)
 
-Copy the `commands/` folder to your project's Claude Code directory:
+Copy both `commands/` and `skills/` folders to your project's Claude Code directory:
 
 ```bash
+# Copy commands
 cp -r commands/ /your/project/.claude/
+
+# Copy skills (optional, for Discord bot functionality)
+cp -r skills/ /your/project/.claude/
 ```
 
 ### Option 2: Clone as Submodule
@@ -324,14 +332,40 @@ The 6-step workflow can be used:
 ## Project Structure
 
 ```
-.claude/commands/
-├── step-1-context.md              # Context gathering
-├── step-2-gherkin-plan.md         # Gherkin test planning  
-├── step-3-tdd-execution.md        # TDD execution cycle
-├── step-4-functional-tests.md     # Manual functional testing
-├── step-5-code-review.md          # AI-assisted code review
-├── step-6-conscious-closure.md    # Conscious task closure
-└── web-snapshot.md                # Web page capture and analysis
+.claude/
+├── commands/                       # Custom slash commands
+│   ├── step-1-context.md           # Context gathering
+│   ├── step-2-gherkin-plan.md      # Gherkin test planning
+│   ├── step-3-tdd-execution.md     # TDD execution cycle
+│   ├── step-4-functional-tests.md  # Manual functional testing
+│   ├── step-5-code-review.md       # AI-assisted code review
+│   ├── step-6-conscious-closure.md # Conscious task closure
+│   ├── web-snapshot.md             # Web page capture and analysis
+│   ├── iniciar-discord-bot.md      # Start Discord bot
+│   ├── paso-1-contexto.md          # Spanish: Context gathering
+│   ├── paso-2-plan-gherkin.md      # Spanish: Gherkin planning
+│   ├── paso-3-tdd-execution.md     # Spanish: TDD execution
+│   ├── paso-4-pruebas-funcionales.md # Spanish: Functional tests
+│   ├── paso-5-code-review-ai.md    # Spanish: Code review
+│   ├── paso-6-cierre-consciente.md # Spanish: Task closure
+│   ├── paso-7-fix-review-comments.md # Spanish: Fix review comments
+│   ├── paso-8-rubocop-reek-analysis.md # Spanish: Static analysis
+│   └── paso-discovery-interview.md # Discovery interview
+│
+└── skills/                         # Claude Code skills
+    └── discord-bot/                # Discord Bot Gateway skill
+        ├── SKILL.md                # Skill definition
+        ├── COMMAND.md              # Command documentation
+        ├── README.md               # Usage guide
+        ├── bot.js                  # Core bot (WebSocket Gateway)
+        ├── discord-notifier.sh     # Message notifier
+        ├── iniciar-discord-bot.sh  # Start script
+        ├── send.js                 # Send messages
+        ├── read.js                 # Read messages
+        ├── package.json            # Dependencies
+        ├── package-lock.json       # Lock file
+        ├── .gitignore              # Git ignore rules
+        └── data/.gitkeep           # Data directory placeholder
 ```
 
 ---
