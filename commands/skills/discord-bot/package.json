@@ -1,6 +1,6 @@
 {
   "name": "discord-bot-gateway",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Discord bot with WebSocket Gateway for real-time bidirectional communication",
   "main": "bot.js",
   "scripts": {

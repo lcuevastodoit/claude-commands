@@ -2,21 +2,42 @@
 
 Colección de herramientas para interactuar con Discord desde Claude Code.
 
-## ⚡ Uso Rápido
+## 🆕 NUEVO: Discord Bot Gateway Plugin
+
+Para **monitoreo en tiempo real** y respuestas automáticas de Claude, usa el nuevo plugin:
+
+```bash
+cd skills/discord-bot
+node install.js
+```
+
+**Características:**
+- ✅ Bot con WebSocket Gateway (siempre online)
+- ✅ Monitoreo de mensajes en tiempo real
+- ✅ Claude recibe notificaciones automáticas
+- ✅ Respuestas bidireccionales
+
+**Documentación:** `skills/discord-bot/README.md`
+
+---
+
+## ⚡ Scripts Clásicos (Legacy)
+
+Para uso simple sin monitoreo en tiempo real:
 
 ### Enviar Mensaje
 ```bash
-node /Users/lcuevas/Codigo/scripts/discord.js send "Tu mensaje aquí"
+node discord.js send "Tu mensaje aquí"
 ```
 
 ### Leer Mensajes
 ```bash
-node /Users/lcuevas/Codigo/scripts/discord.js read --limit=10
+node discord.js read --limit=10
 ```
 
 ### Ver Ayuda
 ```bash
-node /Users/lcuevas/Codigo/scripts/discord.js help
+node discord.js help
 ```
 
 ---
@@ -30,72 +51,67 @@ node /Users/lcuevas/Codigo/scripts/discord.js help
 | `discord.js` | CLI unificado - envía y lee mensajes |
 | `discord-send.js` | Script específico para enviar |
 | `discord-read.js` | Script específico para leer |
-| `discord-monitor.js` | Monitoreo en tiempo real |
+| `discord-monitor.js` | Monitoreo básico (legacy) |
 
-### Comandos Claude Code
+### Plugin Discord Bot Gateway (Recomendado)
 
-| Archivo | Comando | Descripción |
-|---------|---------|-------------|
-| `discord-send.md` | `/discord-send` | Instrucciones para enviar mensajes |
-| `discord-read.md` | `/discord-read` | Instrucciones para leer mensajes |
-| `discord-help.md` | `/discord-help` | Ayuda general |
-
-### Documentación
-
-| Archivo | Contenido |
-|---------|-----------|
-| `discord-setup-guide.md` | Guía completa de instalación y configuración |
-| `discord-send.md` | Documentación del comando send |
-| `discord-read.md` | Documentación del comando read |
+| Archivo | Descripción |
+|---------|-------------|
+| `skills/discord-bot/bot.js` | Bot con WebSocket Gateway |
+| `skills/discord-bot/discord-notifier.sh` | Monitoreo en tiempo real |
+| `skills/discord-bot/send.js` | Enviar mensajes |
+| `skills/discord-bot/read.js` | Leer mensajes |
+| `skills/discord-bot/README.md` | Documentación completa |
 
 ---
 
 ## 🔧 Configuración
 
-**Archivo:** `~/.discord-config.json`
+**Archivo:** `~/.discord-config.json` (en tu home, NO en el repo)
 
 ```json
 {
-  "token": "TU_BOT_TOKEN",
-  "channelId": "1019945518501204002",
-  "userId": "970114927488557146",
-  "serverId": "1019945518501203999",
-  "serverName": "LC Server",
+  "token": "YOUR_BOT_TOKEN_HERE",
+  "channelId": "YOUR_CHANNEL_ID",
+  "userId": "YOUR_USER_ID",
+  "serverId": "YOUR_SERVER_ID",
+  "serverName": "Your Server",
   "defaultChannel": "general"
 }
 ```
 
----
-
-## 📝 IDs Importantes
-
-- **Servidor LC:** `1019945518501203999`
-- **Canal #general:** `1019945518501204002`
-- **Usuario (Luis):** `970114927488557146`
-- **Bot:** `1520243336282374264`
+**Obtener datos:**
+- **Token**: https://discord.com/developers/applications
+- **IDs**: Click derecho en Discord → "Copiar ID" (modo desarrollador)
 
 ---
 
 ## 🚀 Ejemplos
 
-### Enviar al canal por defecto
+### Plugin (Recomendado)
 ```bash
-node /Users/lcuevas/Codigo/scripts/discord.js send "¡Hola equipo!"
+cd skills/discord-bot
+
+# Enviar mensaje
+node send.js "¡Hola equipo!"
+
+# Enviar a canal específico
+node send.js "Alerta" --channel=CHANNEL_ID
+
+# Enviar DM
+node send.js "Hola" --user=USER_ID
+
+# Leer mensajes
+node read.js --limit=20
 ```
 
-### Enviar a canal específico
+### Scripts Legacy
 ```bash
-node /Users/lcuevas/Codigo/scripts/discord.js send "Alerta" --channel=1019945518501204002
-```
+# Enviar al canal por defecto
+node discord.js send "¡Hola!"
 
-### Enviar DM
-```bash
-node /Users/lcuevas/Codigo/scripts/discord.js send "Hola Luis" --user=970114927488557146
-```
-
-### Leer mensajes
-```bash
-node /Users/lcuevas/Codigo/scripts/discord.js read --limit=20
+# Leer mensajes
+node discord.js read --limit=20
 ```
 
 ---
@@ -110,4 +126,15 @@ node /Users/lcuevas/Codigo/scripts/discord.js read --limit=20
 
 ---
 
-**Fecha de creación:** 2026-06-26
+## 📚 Documentación
+
+- **Plugin Gateway**: `skills/discord-bot/README.md`
+- **Setup Guide**: `discord-setup-guide.md`
+- **Quick Start**: `skills/discord-bot/QUICKSTART.md`
+
+---
+
+**Nota**: Los scripts legacy funcionan pero no tienen monitoreo en tiempo real. Para la experiencia completa con notificaciones automáticas a Claude, usa el **Discord Bot Gateway Plugin**.
+
+**Fecha de creación:** 2026-06-26  
+**Última actualización:** 2026-06-27

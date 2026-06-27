@@ -104,6 +104,23 @@ A complete 6-step development lifecycle that guides you from understanding a tas
 |:--------|:--------|
 | `/web-snapshot` | **Web Scraping** - Capture and analyze web pages using Chrome DevTools MCP + Playwright. Ideal for dynamic JavaScript, Shadow DOM, and anti-scraping protections. Supports continuous monitoring with `/loop` |
 
+### 3. Discord Bot Gateway Plugin
+
+Real-time Discord integration with bidirectional communication:
+
+| Component | Purpose |
+|:----------|:--------|
+| `discord-bot-gateway` | **Real-time Bot** - WebSocket Gateway connection, automatic message monitoring, Claude receives instant notifications and can respond to Discord messages live |
+
+**Location:** `commands/skills/discord-bot/`  
+**Features:**
+- ✅ Always online status in Discord
+- ✅ Real-time message notifications to Claude
+- ✅ Bidirectional communication (send and receive)
+- ✅ Auto-start with Claude Code sessions
+
+**Documentation:** See `commands/skills/discord-bot/README.md`
+
 ---
 
 ## Requirements
