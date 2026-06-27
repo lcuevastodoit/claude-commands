@@ -2,6 +2,9 @@
 # ═══════════════════════════════════════════════════════════════════════════
 # INICIAR DISCORD BOT - Comando manual para iniciar el bot y monitor
 # Uso: bash iniciar-discord-bot.sh
+#
+# NOTA: Cuando el usuario me contacta por Discord, debo responderle
+#       directamente en Discord usando send.js, no en otra interfaz.
 # ═══════════════════════════════════════════════════════════════════════════
 
 set -euo pipefail

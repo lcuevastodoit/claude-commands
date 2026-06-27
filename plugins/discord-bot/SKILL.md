@@ -137,6 +137,13 @@ When a message arrives:
 4. Claude Code receives a notification with message details
 5. Claude can compose and send a response via send.js
 
+### IMPORTANT: Responder en el mismo canal
+
+**Regla de oro**: Cuando el usuario me contacta por Discord, debo responderle **directamente en Discord**, no en otra interfaz (CLI, web, etc.).
+
+- Si recibo un mensaje de Discord → Responder usando `send.js` para enviar la respuesta de vuelta a Discord
+- Mantener la conversación en el canal donde fue iniciada para una experiencia fluida
+
 **Example Notification:**
 ```
 ═══════════════════════════════════════════════
