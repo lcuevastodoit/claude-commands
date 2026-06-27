@@ -1,54 +1,37 @@
 ---
 description: Manage Discord Bot Gateway for real-time bidirectional communication. Use when the user wants to send messages to Discord, read received messages, start/stop the bot, or troubleshoot Discord integration.
-hooks:
-  SessionStart:
-    - matcher: startup
-      hooks:
-        - type: command
-          command: "cd ${CLAUDE_SKILL_DIR} && node bot.js status > /dev/null 2>&1 || (echo 'Starting Discord bot...' && nohup node bot.js start > bot.log 2>&1 &)"
-    - matcher: startup
-      hooks:
-        - type: command
-          command: "sleep 3 && ${CLAUDE_SKILL_DIR}/bin/start-message-monitor.sh"
 ---
 
 ## Discord Bot Gateway Skill
 
 This skill manages a Discord bot with WebSocket Gateway for real-time bidirectional communication.
 
+**IMPORTANTE**: Este skill NO usa hooks automáticos. Debes iniciar el bot manualmente con `/iniciar-discord-bot` para evitar bucles infinitos.
+
 ### Current Bot Status
 
-!`node ${CLAUDE_SKILL_DIR}/bot.js status 2>/dev/null || echo "⚠️  Bot not running. Starting automatically..." && cd ${CLAUDE_SKILL_DIR} && node bot.js status`
+!`node ${CLAUDE_SKILL_DIR}/bot.js status 2>/dev/null || echo "⚠️  Bot not running. Start with: /iniciar-discord-bot"`
 
-### Real-Time Message Monitoring
+### Quick Start
 
-**Automatic Setup:**
-- Bot starts automatically when Claude Code initializes
-- Message monitor starts automatically 3 seconds after bot
-- Incoming Discord messages trigger instant notifications to Claude
-
-**Manual Control:**
 ```bash
-# Start message monitor manually
-${CLAUDE_SKILL_DIR}/bin/start-message-monitor.sh
+# Iniciar bot y monitor (MÉTODO RECOMENDADO)
+/iniciar-discord-bot
 
-# Check if monitor is running
-ps aux | grep discord-notifier
-
-# Stop monitor
-pkill -f discord-notifier
+# O manualmente:
+cd ${CLAUDE_SKILL_DIR} && bash iniciar-discord-bot.sh
 ```
 
 ### Available Commands
 
 | Command | Purpose |
 |---------|---------|
-| Start bot | `node ${CLAUDE_SKILL_DIR}/bot.js start` |
+| Start bot + monitor | `/iniciar-discord-bot` |
 | Send message | `node ${CLAUDE_SKILL_DIR}/send.js "message" [--user=ID\|--channel=ID]` |
 | Read messages | `node ${CLAUDE_SKILL_DIR}/read.js [--limit=N] [--dm] [--channel=ID]` |
 | Check status | `node ${CLAUDE_SKILL_DIR}/bot.js status` |
 | View cached | `node ${CLAUDE_SKILL_DIR}/bot.js messages [N]` |
-| Start message monitor | `${CLAUDE_SKILL_DIR}/bin/start-message-monitor.sh` |
+| Stop everything | `pkill -f "discord-bot-gateway"` |
 
 ### Quick Actions
 
@@ -62,9 +45,30 @@ node ${CLAUDE_SKILL_DIR}/send.js "Your message here"
 node ${CLAUDE_SKILL_DIR}/read.js --dm --limit=10
 ```
 
-**To start the bot (if not running):**
+**To start the bot:**
 ```bash
-cd ${CLAUDE_SKILL_DIR} && node bot.js start
+/iniciar-discord-bot
+```
+
+### Real-Time Message Monitoring
+
+**How it works:**
+1. User executes `/iniciar-discord-bot`
+2. Script `iniciar-discord-bot.sh` inicia el bot y el notificador
+3. Bot recibe mensajes via WebSocket y los escribe a `data/messages-stream.log`
+4. `discord-notifier.sh` detecta nuevos mensajes y notifica a Claude
+5. Claude puede responder directamente
+
+**Manual Control:**
+```bash
+# Check if bot is running
+node ${CLAUDE_SKILL_DIR}/bot.js status
+
+# Check if notifier is running
+ps aux | grep discord-notifier
+
+# Stop everything
+pkill -f "discord-bot-gateway"
 ```
 
 ### When to Use
@@ -76,20 +80,6 @@ Use this skill when the user wants to:
 - Troubleshoot Discord connectivity issues
 - Verify the bot configuration
 - Set up real-time message notifications
-
-### Automatic Startup
-
-This skill is configured with SessionStart hooks that automatically:
-1. Starts the Discord bot when Claude Code initializes
-2. Starts the message monitor 3 seconds later
-3. Maintains WebSocket connection to Discord Gateway
-4. Notifies Claude of incoming messages in real-time
-
-**To verify everything started automatically:**
-```bash
-cd ${CLAUDE_SKILL_DIR} && node bot.js status
-ps aux | grep discord-notifier
-```
 
 ### Configuration
 
@@ -117,7 +107,7 @@ The bot maintains a persistent WebSocket connection to Discord Gateway:
 **Real-Time Monitoring:**
 - **messages-stream.log** - Append-only log of incoming messages (JSON Lines format)
 - **discord-notifier.sh** - Polls log file and notifies Claude of new messages
-- **start-message-monitor.sh** - Initializes the message monitor
+- **iniciar-discord-bot.sh** - Unified script to start bot + notifier
 
 **Message Flow:**
 ```
@@ -134,10 +124,9 @@ Unlike the Discord MCP:
 - ✅ Shows "online" status in Discord
 - ✅ Receives messages instantly (no polling)
 - ✅ Maintains WebSocket connection
-- ✅ Auto-starts with Claude Code sessions
-- ✅ **Real-time message notifications to Claude**
-- ✅ **Claude can respond to Discord messages live**
-- Requires `bot.js` to be running (started automatically)
+- ✅ Real-time message notifications to Claude
+- ✅ Claude can respond to Discord messages live
+- ⚠️ Requires manual start with `/iniciar-discord-bot`
 
 ### Real-Time Message Flow
 
@@ -153,16 +142,33 @@ When a message arrives:
 ═══════════════════════════════════════════════
 📩 NUEVO MENSAJE DE DISCORD
 ═══════════════════════════════════════════════
-🕐 14:32:15
 👤 De: Username (ID: 123456789)
 💬 Mensaje: "Hola, ¿cómo estás?"
 📍 Tipo: DM
-🆔 Channel ID: 987654321
 
 💡 Para responder:
    node /path/to/send.js "Tu respuesta" --user=123456789
 ═══════════════════════════════════════════════
 ```
+
+### Why No Auto-Start?
+
+Previous versions used SessionStart hooks to auto-start the bot, but this caused:
+- Infinite process loops
+- Multiple bot instances
+- Resource exhaustion
+
+**Solution**: Manual start with `/iniciar-discord-bot` command.
+
+### Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| Bot won't start | Check `node test.js` for config errors |
+| Duplicate notifications | `pkill -f discord-notifier` and restart |
+| Notifier says "already running" | `rm data/.notifier.lock` and retry |
+| 401 Unauthorized | Check token in `~/.discord-config.json` |
+| Claude not receiving messages | Verify notifier is running: `ps aux \| grep discord-notifier` |
 
 ### Dependencies
 

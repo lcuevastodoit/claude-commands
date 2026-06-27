@@ -1,13 +1,23 @@
 #!/bin/bash
-# Script para verificar mensajes de Discord
-# Uso: Ejecutar cada 10 segundos vía monitor de Claude Code
+# ═══════════════════════════════════════════════════════════════════════════
+# CHECK DISCORD MESSAGES - Para Claude Code (Versión Corregida)
+# Verifica mensajes nuevos sin bucles infinitos ni duplicados
+# ═══════════════════════════════════════════════════════════════════════════
 
-PLUGIN_DIR="/Users/lcuevas/Codigo/tirant1/commands/plugins/discord-bot"
-NOTIFY_FILE="$PLUGIN_DIR/data/.discord-notification"
-LOG_FILE="$PLUGIN_DIR/data/messages-stream.log"
-LAST_POS_FILE="$PLUGIN_DIR/data/.last_pos_check"
+set -euo pipefail
 
-# Inicializar posición
+PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DATA_DIR="$PLUGIN_DIR/data"
+LOG_FILE="$DATA_DIR/messages-stream.log"
+LAST_POS_FILE="$DATA_DIR/.claude_last_pos"
+PROCESSED_IDS_FILE="$DATA_DIR/.claude_processed_ids"
+
+# Crear archivos si no existen
+mkdir -p "$DATA_DIR"
+touch "$LOG_FILE"
+touch "$PROCESSED_IDS_FILE"
+
+# Inicializar posición si no existe
 if [[ ! -f "$LAST_POS_FILE" ]]; then
     wc -c < "$LOG_FILE" > "$LAST_POS_FILE" 2>/dev/null || echo "0" > "$LAST_POS_FILE"
 fi
@@ -15,21 +25,48 @@ fi
 LAST_POS=$(cat "$LAST_POS_FILE" 2>/dev/null || echo "0")
 CURRENT_SIZE=$(wc -c < "$LOG_FILE" 2>/dev/null || echo "0")
 
+# Verificar si hay mensajes nuevos
 if [[ $CURRENT_SIZE -gt $LAST_POS ]]; then
-    # Hay mensajes nuevos
-    tail -c +$((LAST_POS + 1)) "$LOG_FILE" 2>/dev/null | while IFS= read -r line; do
+    # Procesar mensajes nuevos
+    while IFS= read -r line; do
         [[ -z "$line" ]] && continue
-        
+
+        # Verificar JSON válido
+        if ! echo "$line" | jq empty 2>/dev/null; then
+            continue
+        fi
+
         AUTHOR=$(echo "$line" | jq -r '.author // empty' 2>/dev/null)
         CONTENT=$(echo "$line" | jq -r '.content // empty' 2>/dev/null)
-        
-        if [[ -n "$AUTHOR" && -n "$CONTENT" ]]; then
-            echo "📩 NUEVO MENSAJE DE DISCORD"
-            echo "👤 De: $AUTHOR"
-            echo "💬 $CONTENT"
-            echo ""
+        AUTHOR_ID=$(echo "$line" | jq -r '.authorId // empty' 2>/dev/null)
+        IS_DM=$(echo "$line" | jq -r '.isDM // false' 2>/dev/null)
+        MSG_ID=$(echo "$line" | jq -r '.id // empty' 2>/dev/null)
+
+        if [[ -n "$AUTHOR" && -n "$CONTENT" && -n "$MSG_ID" ]]; then
+            # Verificar si ya fue procesado por Claude
+            if ! grep -q "^${MSG_ID}$" "$PROCESSED_IDS_FILE" 2>/dev/null; then
+                echo "📩 NUEVO MENSAJE DE DISCORD"
+                echo "👤 De: $AUTHOR (ID: $AUTHOR_ID)"
+                echo "💬 $CONTENT"
+                if [[ "$IS_DM" == "true" ]]; then
+                    echo "📍 Tipo: DM"
+                else
+                    echo "📍 Tipo: Canal"
+                fi
+                echo ""
+
+                # Marcar como procesado
+                echo "$MSG_ID" >> "$PROCESSED_IDS_FILE"
+
+                # Limpiar si crece mucho
+                if [[ $(wc -l < "$PROCESSED_IDS_FILE") -gt 500 ]]; then
+                    tail -n 250 "$PROCESSED_IDS_FILE" > "$PROCESSED_IDS_FILE.tmp"
+                    mv "$PROCESSED_IDS_FILE.tmp" "$PROCESSED_IDS_FILE"
+                fi
+            fi
         fi
-    done
-    
+    done < <(tail -c +$((LAST_POS + 1)) "$LOG_FILE" 2>/dev/null)
+
+    # Actualizar posición
     echo "$CURRENT_SIZE" > "$LAST_POS_FILE"
 fi

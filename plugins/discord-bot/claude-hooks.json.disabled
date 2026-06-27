@@ -10,7 +10,7 @@
           },
           {
             "type": "command",
-            "command": "echo '[Discord Bot] Starting message monitor in 3s...' && sleep 3 && CLAUDE_SKILL_DIR/bin/start-message-monitor.sh"
+            "command": "echo '[Discord Bot] Starting notifier in 3s...' && sleep 3 && CLAUDE_SKILL_DIR/discord-notifier.sh > /dev/null 2>&1 &"
           }
         ]
       },
@@ -23,7 +23,7 @@
           },
           {
             "type": "command",
-            "command": "sleep 3 && CLAUDE_SKILL_DIR/bin/start-message-monitor.sh"
+            "command": "sleep 3 && CLAUDE_SKILL_DIR/discord-notifier.sh > /dev/null 2>&1 &"
           }
         ]
       },

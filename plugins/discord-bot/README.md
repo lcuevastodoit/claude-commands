@@ -7,8 +7,10 @@ Plugin completo para integración bidireccional con Discord. Recibe mensajes en 
 - **WebSocket Gateway persistente** - Conexión en tiempo real con Discord
 - **Notificaciones duales** - Desktop (macOS) + Claude Code
 - **Respuestas automáticas** - El bot responde directamente a los mensajes
-- **Auto-inicio** - Se inicia automáticamente con Claude Code
+- **Inicio manual controlado** - Comando `/iniciar-discord-bot` (sin hooks automáticos)
 - **Instalación simplificada** - Script de instalación automática
+
+> **NOTA**: Los hooks automáticos fueron removidos para evitar bucles infinitos. Ahora el bot se inicia manualmente con `/iniciar-discord-bot`.
 
 ## Requisitos
 
@@ -84,13 +86,22 @@ Crea el archivo `~/.discord-config.json`:
 
 ## Uso
 
-### Inicio Automático
+### Inicio Manual (RECOMENDADO)
 
-El plugin se inicia automáticamente cuando Claude Code inicia:
+Ejecuta el comando unificado:
 
-1. **Bot WebSocket** se conecta a Discord Gateway
-2. **Notifier** comienza a monitorear mensajes
-3. Claude recibe notificaciones de mensajes nuevos
+```bash
+/iniciar-discord-bot
+```
+
+Este comando:
+- Limpia procesos anteriores
+- Inicia el bot Discord con WebSocket Gateway
+- Inicia el notificador con protección anti-duplicados
+- Inicia el Monitor Tool de Claude Code para recibir mensajes
+- Muestra el estado final
+
+**¿Por qué no auto-inicio?** Los hooks automáticos causaban bucles infinitos y múltiples instancias. El inicio manual da control total.
 
 ### Comandos Manuales
 
@@ -124,28 +135,32 @@ node read.js --dm
 
 ```
 discord-bot/
-├── bot.js                      # Bot principal con WebSocket
+├── bot.js                      # Bot principal con WebSocket Gateway
 ├── send.js                     # CLI para enviar mensajes
 ├── read.js                     # CLI para leer mensajes
-├── discord-notifier.sh         # Notificador desktop + Claude
-├── auto-responder.js           # Responder automático (opcional)
+├── test.js                     # Verificar configuración
+├── auto-responder.js           # Respuestas automáticas del bot
+├── discord-notifier.sh         # Notificador con anti-duplicados
+├── check-discord-messages.sh   # Script para Monitor Tool de Claude
+├── iniciar-discord-bot.sh      # Script unificado (bot + notifier)
 ├── install.sh                  # Instalador automático
+├── package.json                # Dependencias npm
+├── SKILL.md                    # Skill para Claude Code
+├── README.md                   # Documentación principal
+├── CHANGELOG.md                # Historial de cambios
+├── QUICKSTART.md               # Guía rápida
+├── PLUGIN_README.md            # Documentación detallada
+├── LICENSE                     # Licencia MIT
+├── .gitignore                  # Ignorar node_modules, data, logs
+├── .discord-config.json.example # Ejemplo de configuración
 ├── bin/
-│   ├── start-bot.sh           # Iniciar bot
-│   ├── discord-message-monitor.sh  # Monitor para Claude
-│   ├── check-status.sh        # Verificar estado
-│   └── monitor-bot.sh         # Monitor legacy
-├── data/
-│   ├── messages.json          # Cache de mensajes
-│   ├── messages-stream.log    # Log en tiempo real
-│   ├── status.json            # Estado del bot
-│   └── .discord-notification    # Buffer de notificaciones
-├── monitors/
-│   └── monitors.json          # Configuración de monitores
+│   └── start-message-monitor.sh  # Legacy: inicia monitor (opcional)
+├── data/                       # Datos de runtime (no va al repo)
+│   └── .gitkeep                # Mantiene el directorio en git
 ├── hooks/
-│   └── hooks.json             # Hooks de auto-inicio
-├── package.json               # Dependencias npm
-└── README.md                  # Esta documentación
+│   └── hooks.json.disabled     # Hooks deshabilitados (evitan bucles)
+└── monitors/
+    └── monitors.json.disabled  # Monitores deshabilitados
 ```
 
 ## Flujo de Mensajes
@@ -243,6 +258,13 @@ Cada mensaje en `messages-stream.log` tiene este formato:
 MIT - Ver archivo LICENSE para detalles
 
 ## Changelog
+
+### v3.0.0 - Inicio Manual (Sin Hooks Automáticos)
+- **BREAKING**: Removidos hooks automáticos de SessionStart (causaban bucles infinitos)
+- Agregado comando `/iniciar-discord-bot` para inicio manual controlado
+- Agregado `check-discord-messages.sh` para integración con Monitor Tool
+- Protección anti-duplicados mejorada en notificador
+- Documentación actualizada con flujo correcto
 
 ### v2.1.0
 - Sistema de notificación dual (Desktop + Claude Code)
