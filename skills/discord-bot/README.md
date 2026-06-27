@@ -8,7 +8,7 @@ Plugin completo para integración bidireccional con Discord. Recibe mensajes en 
 - **Notificaciones duales** - Desktop (macOS) + Claude Code
 - **Respuestas automáticas** - El bot responde directamente a los mensajes
 - **Inicio manual controlado** - Comando `/iniciar-discord-bot` (sin hooks automáticos)
-- **Instalación simplificada** - Script de instalación automática
+- **Instalación manual** - npm install + configuración
 
 > **NOTA**: Los hooks automáticos fueron removidos para evitar bucles infinitos. Ahora el bot se inicia manualmente con `/iniciar-discord-bot`.
 
@@ -28,18 +28,18 @@ cp -r discord-bot ~/.claude/plugins/
 # O mantener en tu ubicación preferida
 ```
 
-### 2. Ejecutar instalador
+### 2. Instalar dependencias
 
 ```bash
 cd discord-bot
-./install.sh
+npm install
 ```
 
-Este script:
-- Verifica dependencias (Node.js, jq)
-- Instala dependencias npm
-- Configura directorios y permisos
-- Verifica la estructura del plugin
+Esto instalará:
+- `discord.js` - Cliente Discord oficial
+- Otras dependencias de package.json
+
+**Nota**: `node_modules/` está en `.gitignore` y no debe versionarse.
 
 ### 3. Configurar Discord Bot
 
