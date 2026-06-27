@@ -1,248 +1,172 @@
-# Discord Bot Gateway
+# Discord Bot Plugin para Claude Code
 
-Bot de Discord con conexión WebSocket persistente y **monitoreo de mensajes en tiempo real** para Claude Code.
+Plugin completo para integración bidireccional con Discord. Recibe mensajes en tiempo real y responde automáticamente como una conversación natural.
 
-## 🚀 Características Principales
+## Características
 
-✅ **Conexión WebSocket persistente** - Recibe mensajes en tiempo real sin polling  
-✅ **Estado "online" visible** - El bot aparece conectado en Discord  
-✅ **Monitoreo en tiempo real** - Claude recibe notificaciones instantáneas de mensajes entrantes  
-✅ **Comunicación bidireccional** - Claude puede responder mensajes de Discord en vivo  
-✅ **Auto-inicio completo** - Bot y monitor se inician automáticamente con Claude Code  
-✅ **Persistencia** - Guarda mensajes en archivo para consulta posterior
+- **WebSocket Gateway persistente** - Conexión en tiempo real con Discord
+- **Notificaciones duales** - Desktop (macOS) + Claude Code
+- **Respuestas automáticas** - El bot responde directamente a los mensajes
+- **Auto-inicio** - Se inicia automáticamente con Claude Code
+- **Instalación simplificada** - Script de instalación automática
 
-## 📋 Requisitos
+## Requisitos
 
 - Node.js 16+
-- Token de bot de Discord
-- Configuración en `~/.discord-config.json`
-- **jq** (para el monitoreo de mensajes)
+- jq (para procesar mensajes)
+- macOS (para notificaciones de escritorio) o Linux
 
-## 🛠 Instalación Rápida
+## Instalación Rápida
+
+### 1. Clonar o copiar el plugin
 
 ```bash
-cd discord-bot-gateway
-
-# 1. Instalar dependencias y configurar
-node install.js
-
-# 2. Verificar configuración
-node test.js
+# Copiar a la ubicación de plugins de Claude Code
+cp -r discord-bot ~/.claude/plugins/
+# O mantener en tu ubicación preferida
 ```
 
-La instalación configura automáticamente:
-- Dependencias npm
-- Permisos de scripts
-- Directorio de datos
-- Archivo de log para monitoreo
+### 2. Ejecutar instalador
 
-## ⚙️ Configuración
-
-1. **Copiar el archivo de ejemplo** (incluido en el repo):
 ```bash
-cp .discord-config.json.example ~/.discord-config.json
+cd discord-bot
+./install.sh
 ```
 
-2. **Editar `~/.discord-config.json`** con tus datos:
+Este script:
+- Verifica dependencias (Node.js, jq)
+- Instala dependencias npm
+- Configura directorios y permisos
+- Verifica la estructura del plugin
+
+### 3. Configurar Discord Bot
+
+#### 3.1 Crear aplicación en Discord Developer Portal
+
+1. Ve a https://discord.com/developers/applications
+2. Click en "New Application" → Dale un nombre
+3. Ve a la pestaña "Bot" → Click "Reset Token" y guárdalo
+4. Activa estos intents:
+   - ✅ `Message Content Intent` (necesario para leer mensajes)
+   - ✅ `Server Members Intent` (opcional, para información de miembros)
+
+#### 3.2 Invitar el bot a tu servidor
+
+1. Ve a "OAuth2" → "URL Generator"
+2. Selecciona scopes: `bot`
+3. Selecciona permisos:
+   - ✅ Send Messages
+   - ✅ Read Message History
+   - ✅ View Channels
+4. Copia la URL generada y ábrela en tu navegador
+5. Selecciona el servidor y autoriza
+
+#### 3.3 Configurar archivo de configuración
+
+Crea el archivo `~/.discord-config.json`:
 
 ```json
 {
-  "token": "TU_BOT_TOKEN",
+  "token": "TU_BOT_TOKEN_AQUI",
   "channelId": "ID_CANAL_POR_DEFECTO",
   "userId": "TU_USER_ID"
 }
 ```
 
 **Obtener los valores:**
-- **Token**: https://discord.com/developers/applications → Tu App → Bot → Reset Token
-- **Channel ID**: Click derecho en canal → "Copiar ID del canal" (modo desarrollador)
+
+- **Token**: Discord Developer Portal → Tu App → Bot → Reset Token
+- **Channel ID**: Click derecho en canal → "Copiar ID del canal" (modo desarrollador activado)
 - **User ID**: Click derecho en tu usuario → "Copiar ID de usuario" (modo desarrollador)
 
-### Intents requeridos en Discord Developer Portal
+**Activar Modo Desarrollador en Discord:**
+- Discord → Configuración → Avanzado → Modo Desarrollador: ON
 
-- ✅ `Message Content Intent` (necesario para leer mensajes)
-- ✅ `Server Members Intent` (opcional)
+## Uso
 
-### Instalar jq
+### Inicio Automático
 
-```bash
-# macOS
-brew install jq
+El plugin se inicia automáticamente cuando Claude Code inicia:
 
-# Ubuntu/Debian
-sudo apt-get install jq
-```
+1. **Bot WebSocket** se conecta a Discord Gateway
+2. **Notifier** comienza a monitorear mensajes
+3. Claude recibe notificaciones de mensajes nuevos
 
-## 🎯 Uso
-
-### Inicio Automático (Recomendado)
-
-Al instalar el plugin con `node install.js`, se configuran hooks automáticos:
-
-1. **Bot** se inicia al abrir Claude Code
-2. **Monitor de mensajes** se inicia 3 segundos después
-3. Claude recibe notificaciones de mensajes entrantes automáticamente
-
-Para verificar que todo funciona:
-```bash
-# Ver estado del bot
-node bot.js status
-
-# Ver si el monitor está corriendo
-ps aux | grep discord-notifier
-```
-
-### Inicio Manual
-
-Si necesitas iniciar componentes manualmente:
+### Comandos Manuales
 
 ```bash
+# En el directorio del plugin
+cd /ruta/al/discord-bot
+
 # Iniciar bot
 node bot.js start
 
-# Iniciar monitor de mensajes (en otra terminal)
-./bin/start-message-monitor.sh
-```
-
-## 💬 Flujo de Mensajes en Tiempo Real
-
-```
-[Discord] → [bot.js WebSocket] → [messages-stream.log]
-                                        ↓
-                              [discord-notifier.sh]
-                                        ↓
-                              [Claude Code] → Responde → [send.js] → [Discord]
-```
-
-Cuando llega un mensaje, Claude recibe:
-```
-═══════════════════════════════════════════════
-📩 NUEVO MENSAJE DE DISCORD
-═══════════════════════════════════════════════
-👤 De: Username (ID: 123456789)
-💬 Mensaje: "Hola, ¿cómo estás?"
-📍 Tipo: DM
-
-💡 Para responder:
-   node send.js "Tu respuesta" --user=123456789
-═══════════════════════════════════════════════
-```
-
-## 📝 Comandos Disponibles
-
-### Enviar mensajes
-```bash
-# Enviar al usuario por defecto (DM)
-node send.js "Hola, ¿cómo estás?"
-
-# Enviar a usuario específico
-node send.js "Hola" --user=970114927488557146
-
-# Enviar a canal específico
-node send.js "Mensaje de prueba" --channel=1019945518501204002
-```
-
-### Leer mensajes
-```bash
-# Últimos 10 mensajes
-node read.js
-
-# Últimos 20 mensajes
-node read.js --limit=20
-
-# Solo mensajes directos (DMs)
-node read.js --dm
-
-# De canal específico
-node read.js --channel=1019945518501204002
-```
-
-### Ver estado
-```bash
+# Ver estado
 node bot.js status
+
+# Detener bot
+node bot.js stop
+
+# Enviar mensaje a usuario (DM)
+node send.js "Hola, ¿cómo estás?" --user=ID_USUARIO
+
+# Enviar mensaje a canal
+node send.js "Mensaje de prueba" --channel=ID_CANAL
+
+# Leer últimos mensajes
+node read.js --limit=10
+
+# Leer solo DMs
+node read.js --dm
 ```
 
-### Ver mensajes guardados (sin bot activo)
-```bash
-node bot.js messages
-node bot.js messages 20
-```
-
-## 🔧 Control del Monitor de Mensajes
-
-```bash
-# Iniciar monitor manualmente
-./bin/start-message-monitor.sh
-
-# Verificar si está corriendo
-ps aux | grep discord-notifier
-
-# Detener monitor
-pkill -f discord-notifier
-```
-
-## 📁 Estructura de Archivos
+### Estructura de Archivos
 
 ```
-discord-bot-gateway/
+discord-bot/
 ├── bot.js                      # Bot principal con WebSocket
 ├── send.js                     # CLI para enviar mensajes
 ├── read.js                     # CLI para leer mensajes
-├── test.js                     # Verificar configuración
-├── install.js                  # Instalación automática
-├── discord-notifier.sh         # Monitor de mensajes en tiempo real
+├── discord-notifier.sh         # Notificador desktop + Claude
+├── auto-responder.js           # Responder automático (opcional)
+├── install.sh                  # Instalador automático
 ├── bin/
-│   ├── start-bot.sh            # Inicia el bot
-│   ├── start-message-monitor.sh # Inicia el monitor
-│   ├── check-status.sh         # Verifica estado
-│   └── monitor-bot.sh          # Monitor legacy
-├── hooks/
-│   └── hooks.json              # Hooks de auto-inicio
+│   ├── start-bot.sh           # Iniciar bot
+│   ├── discord-message-monitor.sh  # Monitor para Claude
+│   ├── check-status.sh        # Verificar estado
+│   └── monitor-bot.sh         # Monitor legacy
 ├── data/
-│   ├── messages.json           # Cache de mensajes
-│   ├── messages-stream.log     # Log para monitoreo (append)
-│   └── status.json             # Estado del bot
-├── SKILL.md                    # Documentación del skill
-├── PLUGIN_README.md            # Documentación del plugin
-└── README.md                   # Este archivo
+│   ├── messages.json          # Cache de mensajes
+│   ├── messages-stream.log    # Log en tiempo real
+│   ├── status.json            # Estado del bot
+│   └── .discord-notification    # Buffer de notificaciones
+├── monitors/
+│   └── monitors.json          # Configuración de monitores
+├── hooks/
+│   └── hooks.json             # Hooks de auto-inicio
+├── package.json               # Dependencias npm
+└── README.md                  # Esta documentación
 ```
 
-## 🔄 Diferencias con MCP de Discord
+## Flujo de Mensajes
 
-| Característica | MCP de Discord | Bot Gateway |
-|----------------|----------------|-------------|
-| Conexión | REST API (polling) | WebSocket (real-time) |
-| Estado online | ❌ No aparece | ✅ Siempre visible |
-| Recibir mensajes | Manual | ✅ Automático |
-| Notificar a Claude | ❌ No | ✅ En tiempo real |
-| Latencia | Delay por polling | Instantáneo |
-| Claude puede responder | ❌ Solo enviar | ✅ Enviar y responder |
-| Auto-inicio | ❌ No | ✅ Con hooks |
-
-## 🐛 Troubleshooting
-
-### El monitor no notifica mensajes
-
-1. Verificar que jq está instalado:
-```bash
-jq --version
+```
+Discord Gateway
+      ↓
+  bot.js (WebSocket)
+      ↓
+messages-stream.log
+      ↓
+discord-notifier.sh
+      ├──→ Notificación Desktop (macOS)
+      └──→ Notificación Claude Code
+              ↓
+        Claude responde (opcional)
+              ↓
+          send.js → Discord
 ```
 
-2. Verificar que el monitor está corriendo:
-```bash
-ps aux | grep discord-notifier
-```
-
-3. Reiniciar el monitor:
-```bash
-pkill -f discord-notifier
-./bin/start-message-monitor.sh
-```
-
-4. Probar manualmente:
-```bash
-echo '{"ts":123,"id":"test","content":"prueba","author":"Test","authorId":"123","isDM":true,"channelId":"456"}' >> data/messages-stream.log
-```
+## Solución de Problemas
 
 ### El bot no se conecta
 
@@ -250,29 +174,88 @@ echo '{"ts":123,"id":"test","content":"prueba","author":"Test","authorId":"123",
 # Verificar configuración
 node test.js
 
-# Verificar intents en Discord Developer Portal
-# https://discord.com/developers/applications
+# Verificar logs
+tail -f data/bot.log
+
+# Reiniciar
+pkill -f "bot.js"
+node bot.js start
 ```
 
-### Token inválido
+### No llegan notificaciones
 
-1. Ir a https://discord.com/developers/applications
-2. Seleccionar tu aplicación → Bot → Reset Token
-3. Actualizar `~/.discord-config.json`
+```bash
+# Verificar que notifier está corriendo
+ps aux | grep discord-notifier
 
-## 📚 Documentación
+# Verificar últimos mensajes
+tail -5 data/messages-stream.log
 
-- `SKILL.md` - Skill para Claude Code (comandos y uso)
-- `PLUGIN_README.md` - Documentación completa del plugin
-- `README.md` - Guía rápida (este archivo)
+# Reiniciar notifier
+pkill -f "discord-notifier"
+./discord-notifier.sh &
+```
 
-## 🔗 Enlaces útiles
+### Error "No se pudo cargar la configuración"
 
-- [Discord.js Guide](https://discordjs.guide/)
-- [Discord Gateway Documentation](https://discord.com/developers/docs/topics/gateway)
-- [Discord Developer Portal](https://discord.com/developers/applications)
-- [jq Manual](https://stedolan.github.io/jq/manual/)
+```bash
+# Verificar que existe el archivo
+ls -la ~/.discord-config.json
 
----
+# Verificar formato JSON
+jq . ~/.discord-config.json
 
-**Versión 2.0.0** - Sistema de monitoreo en tiempo real agregado
+# Si está en otra ubicación, crear enlace simbólico
+ln -s ~/.discord-config.json ~/Codigo/.discord-config.json
+```
+
+## Desarrollo
+
+### Agregar Respuestas Automáticas
+
+Editar `auto-responder.js` y agregar patrones:
+
+```javascript
+// En la función generateResponse
+if (/tu-patron/.test(lowerContent)) {
+    return 'Tu respuesta personalizada';
+}
+```
+
+### Estructura del Mensaje
+
+Cada mensaje en `messages-stream.log` tiene este formato:
+
+```json
+{
+  "ts": 1234567890123,
+  "id": "mensaje-id-discord",
+  "content": "Contenido del mensaje",
+  "author": "Nombre de usuario",
+  "authorId": "id-del-usuario",
+  "isDM": true,
+  "channelId": "id-del-canal"
+}
+```
+
+## Licencia
+
+MIT - Ver archivo LICENSE para detalles
+
+## Changelog
+
+### v2.1.0
+- Sistema de notificación dual (Desktop + Claude Code)
+- Instalador automático
+- Auto-responder integrado
+- Soporte multi-plataforma (macOS/Linux)
+
+### v2.0.0
+- Sistema de monitoreo en tiempo real
+- Notificaciones nativas de macOS
+- Monitor de Claude Code
+
+### v1.0.0
+- Bot WebSocket Gateway básico
+- Comandos send.js y read.js
+- Auto-inicio con SessionStart hooks

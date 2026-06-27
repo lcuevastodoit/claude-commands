@@ -15,7 +15,7 @@ check_bot_running() {
     if [ -f "$STATUS_FILE" ]; then
         local last_ping=$(cat "$STATUS_FILE" 2>/dev/null | grep -o '"lastPing":[0-9]*' | cut -d':' -f2)
         if [ -n "$last_ping" ]; then
-            local now=$(date +%s%3N)
+            local now=$(node -e "console.log(Date.now())")
             local diff=$((now - last_ping))
             if [ $diff -lt 15000 ]; then
                 return 0

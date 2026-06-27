@@ -10,7 +10,7 @@
           },
           {
             "type": "command",
-            "command": "sleep 2 && ${CLAUDE_PLUGIN_ROOT}/bin/start-message-monitor.sh"
+            "command": "sleep 3 && ${CLAUDE_PLUGIN_ROOT}/discord-notifier.sh > /dev/null 2>&1"
           }
         ]
       },
@@ -23,7 +23,7 @@
           },
           {
             "type": "command",
-            "command": "sleep 2 && ${CLAUDE_PLUGIN_ROOT}/bin/start-message-monitor.sh"
+            "command": "sleep 3 && ${CLAUDE_PLUGIN_ROOT}/discord-notifier.sh > /dev/null 2>&1"
           }
         ]
       },
