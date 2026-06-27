@@ -179,48 +179,9 @@ client.on(Events.Error, (error) => {
 // ═══════════════════════════════════════════════════════════════════════════
 
 async function handleAutoResponse(message) {
-    const content = message.content.toLowerCase();
-
-    // Responder a saludos
-    if (content === 'hola' || content === 'hi' || content === 'hello') {
-        await message.reply('¡Hola! 👋 Estoy conectado y listo para ayudarte.');
-    }
-
-    // Responder a ping
-    if (content === 'ping') {
-        const latency = Date.now() - message.createdTimestamp;
-        await message.reply(`🏓 Pong! Latencia: ${latency}ms`);
-    }
-
-    // Mostrar ayuda
-    if (content === 'ayuda' || content === 'help') {
-        await message.reply(`
-🤖 **Comandos disponibles:**
-\`ping\` - Ver latencia
-\`estado\` - Ver estado del bot
-\`dm\` - Verificar si esto es un DM
-\`ayuda\` - Mostrar esta ayuda
-
-**Funcionalidades:**
-- Recibo mensajes en tiempo real vía WebSocket
-- Estado "online" visible
-- Comunicación bidireccional
-        `);
-    }
-
-    // Verificar si es DM
-    if (content === 'dm') {
-        const isDM = message.channel.isDMBased?.() || false;
-        await message.reply(isDM ? '✅ Esto es un mensaje directo (DM)' : '❌ Esto es un canal de servidor');
-    }
-
-    // Mostrar estado
-    if (content === 'estado' || content === 'status') {
-        const uptime = client.uptime ? Math.floor(client.uptime / 1000) : 0;
-        const minutes = Math.floor(uptime / 60);
-        const seconds = uptime % 60;
-        await message.reply(`✅ Bot activo | Uptime: ${minutes}m ${seconds}s | WebSocket: Conectado`);
-    }
+    // Las auto-respuestas están desactivadas para evitar duplicados
+    // El bot solo reenvía mensajes a Claude, no responde automáticamente
+    return;
 }
 
 function saveMessages() {

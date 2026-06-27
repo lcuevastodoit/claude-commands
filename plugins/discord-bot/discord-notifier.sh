@@ -13,8 +13,10 @@ LOG_FILE="$DATA_DIR/messages-stream.log"
 LAST_POS_FILE="$DATA_DIR/.last_log_pos"
 NOTIFY_FILE="$DATA_DIR/.discord-notification"
 PROCESSED_IDS_FILE="$DATA_DIR/.processed_message_ids"
+PROCESSED_CONTENT_FILE="$DATA_DIR/.processed_content_hashes"
 LOCK_FILE="$DATA_DIR/.notifier.lock"
 PID_FILE="$DATA_DIR/.notifier.pid"
+DEDUP_WINDOW_SECONDS=30
 
 # Crear directorios si no existen
 mkdir -p "$DATA_DIR"
@@ -63,10 +65,60 @@ trap cleanup_lock EXIT
 # FUNCIONES DE UTILIDAD
 # ═══════════════════════════════════════════════════════════════════════════
 
-# Verificar si un mensaje ya fue procesado
+# Verificar si un mensaje ya fue procesado (por ID)
 is_message_processed() {
     local msg_id="$1"
     grep -q "^${msg_id}$" "$PROCESSED_IDS_FILE" 2>/dev/null
+}
+
+# Generar hash simple del contenido
+hash_content() {
+    local author="$1"
+    local content="$2"
+    echo "${author}:${content}" | md5 | cut -d' ' -f1
+}
+
+# Verificar si el contenido fue procesado recientemente (últimos X segundos)
+is_content_processed() {
+    local author="$1"
+    local content="$2"
+    local hash=$(hash_content "$author" "$content")
+    local now=$(date +%s)
+
+    if [[ -f "$PROCESSED_CONTENT_FILE" ]]; then
+        while IFS=: read -r h ts || [[ -n "$h" ]]; do
+            [[ -z "$h" ]] && continue
+            if [[ "$h" == "$hash" ]]; then
+                # Verificar si está dentro de la ventana de deduplicación
+                local diff=$((now - ts))
+                if [[ $diff -lt $DEDUP_WINDOW_SECONDS ]]; then
+                    return 0  # Ya fue procesado recientemente
+                fi
+            fi
+        done < "$PROCESSED_CONTENT_FILE"
+    fi
+    return 1  # No fue procesado
+}
+
+# Marcar contenido como procesado
+mark_content_processed() {
+    local author="$1"
+    local content="$2"
+    local hash=$(hash_content "$author" "$content")
+    local now=$(date +%s)
+    echo "${hash}:${now}" >> "$PROCESSED_CONTENT_FILE"
+
+    # Limpiar entradas viejas (mayores a DEDUP_WINDOW_SECONDS)
+    if [[ -f "$PROCESSED_CONTENT_FILE" && $(wc -l < "$PROCESSED_CONTENT_FILE") -gt 500 ]]; then
+        local cutoff=$((now - DEDUP_WINDOW_SECONDS))
+        while IFS=: read -r h ts || [[ -n "$h" ]]; do
+            [[ -z "$h" ]] && continue
+            if [[ $ts -gt $cutoff ]]; then
+                echo "${h}:${ts}"
+            fi
+        done < "$PROCESSED_CONTENT_FILE" > "${PROCESSED_CONTENT_FILE}.tmp"
+        mv "${PROCESSED_CONTENT_FILE}.tmp" "$PROCESSED_CONTENT_FILE"
+    fi
 }
 
 # Marcar mensaje como procesado
@@ -164,15 +216,19 @@ while true; do
 
             # Validar datos y verificar duplicados
             if [[ -n "$AUTHOR" && -n "$CONTENT" && -n "$MSG_ID" ]]; then
-                if ! is_message_processed "$MSG_ID"; then
+                # Verificar duplicado por ID o por contenido (autor + mensaje)
+                if ! is_message_processed "$MSG_ID" && ! is_content_processed "$AUTHOR" "$CONTENT"; then
                     # Notificaciones
                     notify_desktop "$AUTHOR" "$CONTENT"
                     notify_claude "$AUTHOR" "$CONTENT" "$AUTHOR_ID" "$IS_DM"
 
-                    # Marcar como procesado
+                    # Marcar como procesado (ambos métodos)
                     mark_message_processed "$MSG_ID"
+                    mark_content_processed "$AUTHOR" "$CONTENT"
 
                     echo "[Discord Notifier] $(date '+%H:%M:%S') - Mensaje de $AUTHOR procesado"
+                else
+                    echo "[Discord Notifier] $(date '+%H:%M:%S') - Mensaje duplicado ignorado (ID: $MSG_ID)"
                 fi
             fi
 

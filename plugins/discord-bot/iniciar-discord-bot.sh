@@ -15,20 +15,13 @@ echo "  INICIANDO DISCORD BOT PLUGIN"
 echo "══════════════════════════════════════════════════════════════════"
 echo ""
 
-# 1. Limpiar procesos anteriores si existen
-echo "🧹 Limpiando procesos anteriores..."
-pkill -f "discord-bot-gateway/bot.js" 2>/dev/null || true
-pkill -f "discord-notifier.sh" 2>/dev/null || true
-rm -f "$DATA_DIR/.notifier.lock" 2>/dev/null || true
-rm -f "$DATA_DIR/.notifier.pid" 2>/dev/null || true
-sleep 1
-
-# 2. Verificar que el bot no esté corriendo
-if pgrep -f "discord-bot-gateway/bot.js start" > /dev/null 2>&1; then
-    echo "⚠️  El bot ya está corriendo"
-    echo "   PID: $(pgrep -f "discord-bot-gateway/bot.js start")"
+# 1. Verificar si el bot ya está corriendo
+if pgrep -f "discord-bot-gateway/bot.js" > /dev/null 2>&1; then
+    BOT_PID=$(pgrep -f "discord-bot-gateway/bot.js" | head -1)
+    echo "✅ El bot ya está corriendo (PID: $BOT_PID)"
+    echo "   No se reinicia para evitar pérdida de mensajes"
 else
-    # Iniciar el bot
+    # Iniciar el bot solo si no estaba corriendo
     echo "🤖 Iniciando bot Discord..."
     cd "$PLUGIN_DIR"
     nohup node bot.js start >> "$LOG_FILE" 2>&1 &
@@ -43,18 +36,17 @@ else
     fi
 fi
 
-# 3. Verificar que el notifier no esté corriendo
+# 2. Limpiar locks huérfanos del notificador si existen
 if [[ -f "$DATA_DIR/.notifier.lock" ]]; then
     lock_pid=$(cat "$DATA_DIR/.notifier.lock" 2>/dev/null || echo "")
-    if [[ -n "$lock_pid" ]] && kill -0 "$lock_pid" 2>/dev/null; then
-        echo "⚠️  El notificador ya está corriendo (PID: $lock_pid)"
-    else
+    if [[ -n "$lock_pid" ]] && ! kill -0 "$lock_pid" 2>/dev/null; then
+        echo "🧹 Limpiando lock huérfano del notificador..."
         rm -f "$DATA_DIR/.notifier.lock"
-        echo "🧹 Lock anterior limpiado"
+        rm -f "$DATA_DIR/.notifier.pid"
     fi
 fi
 
-# 4. Iniciar el notificador
+# 3. Iniciar el notificador (siempre, para asegurar que el monitor esté activo)
 echo "🔔 Iniciando notificador..."
 bash "$PLUGIN_DIR/discord-notifier.sh" > /dev/null 2>&1 &
 sleep 2
