@@ -57,11 +57,11 @@ node discord.js help
 
 | Archivo | Descripción |
 |---------|-------------|
-| `../plugins/bot.js` | Bot con WebSocket Gateway |
-| `../plugins/discord-notifier.sh` | Monitoreo en tiempo real |
-| `../plugins/send.js` | Enviar mensajes |
-| `../plugins/read.js` | Leer mensajes |
-| `../plugins/README.md` | Documentación completa |
+| `../plugins/discord-bot/bot.js` | Bot con WebSocket Gateway |
+| `../plugins/discord-bot/discord-notifier.sh` | Monitoreo en tiempo real |
+| `../plugins/discord-bot/send.js` | Enviar mensajes |
+| `../plugins/discord-bot/read.js` | Leer mensajes |
+| `../plugins/discord-bot/README.md` | Documentación completa |
 
 ---
 
@@ -128,9 +128,9 @@ node discord.js read --limit=20
 
 ## 📚 Documentación
 
-- **Plugin Gateway**: `../plugins/README.md`
+- **Plugin Gateway**: `../plugins/discord-bot/README.md`
 - **Setup Guide**: `discord-setup-guide.md`
-- **Quick Start**: `../plugins/QUICKSTART.md`
+- **Quick Start**: `../plugins/discord-bot/QUICKSTART.md`
 
 ---
 
