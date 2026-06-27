@@ -7,7 +7,7 @@ Colección de herramientas para interactuar con Discord desde Claude Code.
 Para **monitoreo en tiempo real** y respuestas automáticas de Claude, usa el nuevo plugin:
 
 ```bash
-cd skills/discord-bot
+cd ../plugin
 node install.js
 ```
 
@@ -57,11 +57,11 @@ node discord.js help
 
 | Archivo | Descripción |
 |---------|-------------|
-| `skills/discord-bot/bot.js` | Bot con WebSocket Gateway |
-| `skills/discord-bot/discord-notifier.sh` | Monitoreo en tiempo real |
-| `skills/discord-bot/send.js` | Enviar mensajes |
-| `skills/discord-bot/read.js` | Leer mensajes |
-| `skills/discord-bot/README.md` | Documentación completa |
+| `../plugin/bot.js` | Bot con WebSocket Gateway |
+| `../plugin/discord-notifier.sh` | Monitoreo en tiempo real |
+| `../plugin/send.js` | Enviar mensajes |
+| `../plugin/read.js` | Leer mensajes |
+| `../plugin/README.md` | Documentación completa |
 
 ---
 
@@ -90,7 +90,7 @@ node discord.js help
 
 ### Plugin (Recomendado)
 ```bash
-cd skills/discord-bot
+cd ../plugin
 
 # Enviar mensaje
 node send.js "¡Hola equipo!"
@@ -128,9 +128,9 @@ node discord.js read --limit=20
 
 ## 📚 Documentación
 
-- **Plugin Gateway**: `skills/discord-bot/README.md`
+- **Plugin Gateway**: `../plugin/README.md`
 - **Setup Guide**: `discord-setup-guide.md`
-- **Quick Start**: `skills/discord-bot/QUICKSTART.md`
+- **Quick Start**: `../plugin/QUICKSTART.md`
 
 ---
 

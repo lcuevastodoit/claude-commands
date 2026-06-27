@@ -112,14 +112,20 @@ Real-time Discord integration with bidirectional communication:
 |:----------|:--------|
 | `discord-bot-gateway` | **Real-time Bot** - WebSocket Gateway connection, automatic message monitoring, Claude receives instant notifications and can respond to Discord messages live |
 
-**Location:** `commands/skills/discord-bot/`  
+**Location:** `plugin/`  
 **Features:**
 - ✅ Always online status in Discord
 - ✅ Real-time message notifications to Claude
 - ✅ Bidirectional communication (send and receive)
 - ✅ Auto-start with Claude Code sessions
 
-**Documentation:** See `commands/skills/discord-bot/README.md`
+**Quick Install:**
+```bash
+cd plugin
+node install.js
+```
+
+**Documentation:** See `plugin/README.md`
 
 ---
 
