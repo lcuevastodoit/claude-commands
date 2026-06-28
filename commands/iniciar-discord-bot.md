@@ -24,14 +24,23 @@ Inicia el bot de Discord, el notificador de mensajes y el monitor para Claude.
 ## Comandos relacionados
 
 - **Detener**: `pkill -f "discord-bot-gateway"`
-- **Ver estado**: `node ${CLAUDE_SKILL_DIR}/bot.js status`
-- **Enviar DM**: `node ${CLAUDE_SKILL_DIR}/send.js "Mensaje" --user=970114927488557146`
+- **Ver estado**: `node ~/.claude/skills/discord-bot-gateway/bot.js status`
+- **Enviar DM**: `node ~/.claude/skills/discord-bot-gateway/send.js "Mensaje" --user=970114927488557146`
 
 ## Notas
 
 - El bot no se inicia automáticamente al reiniciar Claude Code (sin hooks)
 - El notificador tiene protección contra instancias duplicadas
 - **El Monitor Tool permite que Claude reciba notificaciones INSTANTÁNEAS de mensajes Discord**
+
+---
+
+## IMPORTANTE: Responder en Discord
+
+**Regla de oro**: Cuando el usuario me contacta por Discord, debo responderle **directamente en Discord**, no en otra interfaz (CLI, web, etc.).
+
+- Si recibo un mensaje de Discord → Responder usando `send.js` para enviar la respuesta de vuelta a Discord
+- Mantener la conversación en el canal donde fue iniciada para una experiencia fluida
 
 ---
 
@@ -48,14 +57,14 @@ Skill: discord-bot-gateway (args: start)
 
 O manualmente:
 ```bash
-cd ${CLAUDE_SKILL_DIR} && nohup node bot.js start >> bot.log 2>&1 &
+cd ~/.claude/skills/discord-bot-gateway && nohup node bot.js start >> bot.log 2>&1 &
 sleep 5
 ```
 
 ### 2. Iniciar el notificador (si no está corriendo)
 
 ```bash
-bash ${CLAUDE_SKILL_DIR}/discord-notifier.sh > /dev/null 2>&1 &
+bash ~/.claude/skills/discord-bot-gateway/discord-notifier.sh > /dev/null 2>&1 &
 ```
 
 ### 3. **CRÍTICO: Iniciar el Monitor Tool de Claude Code**
@@ -70,7 +79,7 @@ El Monitor Tool es la herramienta nativa de Claude Code que permite recibir noti
 
 ```javascript
 Monitor({
-  command: "bash -c 'while true; do bash ${CLAUDE_SKILL_DIR}/check-discord-messages.sh; sleep 10; done'",
+  command: "bash -c 'while true; do bash ~/.claude/skills/discord-bot-gateway/check-discord-messages.sh; sleep 10; done'",
   description: "Discord messages watcher",
   persistent: true
 })
@@ -79,7 +88,7 @@ Monitor({
 O con tail del archivo de notificación:
 ```javascript
 Monitor({
-  command: "tail -f ${CLAUDE_SKILL_DIR}/data/.discord-notification | grep --line-buffered '📩'",
+  command: "tail -f ~/.claude/skills/discord-bot-gateway/data/.discord-notification | grep --line-buffered '📩'",
   description: "Discord message notifications",
   persistent: true
 })
@@ -91,7 +100,7 @@ Monitor({
 
 ```bash
 echo "🤖 Bot:" && (pgrep -f "discord-bot-gateway/bot.js" > /dev/null && echo "   ✅ Corriendo" || echo "   ❌ Detenido")
-echo "🔔 Notificador:" && (ls ${CLAUDE_SKILL_DIR}/data/.notifier.lock 2>/dev/null > /dev/null && echo "   ✅ Corriendo" || echo "   ❌ Detenido")
+echo "🔔 Notificador:" && (ls ~/.claude/skills/discord-bot-gateway/data/.notifier.lock 2>/dev/null > /dev/null && echo "   ✅ Corriendo" || echo "   ❌ Detenido")
 echo "👁️  Monitor Claude:" && echo "   ✅ Iniciado - Recibiendo notificaciones en tiempo real"
 ```
 
@@ -136,7 +145,7 @@ El método más confiable es usar el skill disponible:
 Luego iniciar el Monitor Tool:
 ```javascript
 Monitor({
-  command: "while true; do bash ${CLAUDE_SKILL_DIR}/check-discord-messages.sh; sleep 10; done",
+  command: "while true; do bash ~/.claude/skills/discord-bot-gateway/check-discord-messages.sh; sleep 10; done",
   description: "Discord messages monitor",
   persistent: true
 })
@@ -151,7 +160,7 @@ Monitor({
 - O usa `nohup` para ejecutar en segundo plano
 
 ### El notificador dice "Ya hay una instancia corriendo"
-- Limpiar locks: `rm ${CLAUDE_SKILL_DIR}/data/.notifier.lock`
+- Limpiar locks: `rm ~/.claude/skills/discord-bot-gateway/data/.notifier.lock`
 - Matar procesos: `pkill -f discord-notifier.sh`
 
 ### Múltiples instancias del bot
@@ -160,7 +169,7 @@ Monitor({
 
 ### Claude no recibe los mensajes
 - **Verificar que el Monitor Tool esté corriendo**: Debe aparecer como notificación activa
-- **Verificar archivo de notificación**: `cat ${CLAUDE_SKILL_DIR}/data/.discord-notification`
+- **Verificar archivo de notificación**: `cat ~/.claude/skills/discord-bot-gateway/data/.discord-notification`
 - **Verificar Monitor**: El Monitor Tool debe estar activo con `persistent: true`
 
 ### Para detener el Monitor Tool
