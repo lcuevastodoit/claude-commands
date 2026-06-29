@@ -210,7 +210,7 @@ Verifica:
 
 ## Ejemplo Completo
 
-Ver `/Users/lcuevas/Codigo/webml-webpage/` para un ejemplo práctico de prueba de chat con modelo LLM local (Gemma 4).
+Ver `/Users/<user>/root-project-path/webml-webpage/` para un ejemplo práctico de prueba de chat con modelo LLM local (Gemma 4).
 
 Evidencia generada:
 - Screenshot: `test-evidence.png`

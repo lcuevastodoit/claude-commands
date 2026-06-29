@@ -7,20 +7,20 @@ description: Envía mensajes a Discord usando Node.js
 ## Uso Rápido
 
 ```bash
-node /Users/lcuevas/Codigo/scripts/discord.js send "Tu mensaje aquí"
+node /Users/<user>/root-project-path/scripts/discord.js send "Tu mensaje aquí"
 ```
 
 ## Ejemplos
 
 ```bash
 # Canal por defecto (configurado en ~/.discord-config.json)
-node /Users/lcuevas/Codigo/scripts/discord.js send "Hola equipo"
+node /Users/<user>/root-project-path/scripts/discord.js send "Hola equipo"
 
 # Canal específico
-node /Users/lcuevas/Codigo/scripts/discord.js send "Alerta" --channel=1019945518501204002
+node /Users/<user>/root-project-path/scripts/discord.js send "Alerta" --channel=1019945518501204002
 
 # DM a usuario
-node /Users/lcuevas/Codigo/scripts/discord.js send "Hola Luis" --user=970114927488557146
+node /Users/<user>/root-project-path/scripts/discord.js send "Hola Luis" --user=970114927488557146
 ```
 
 ## Configuración
@@ -40,6 +40,6 @@ El script lee automáticamente desde `~/.discord-config.json`:
 
 ## Archivos
 
-- Script: `/Users/lcuevas/Codigo/scripts/discord.js`
+- Script: `/Users/<user>/root-project-path/scripts/discord.js`
 - Config: `~/.discord-config.json`
-- Guía: `/Users/lcuevas/Codigo/claude-commands/commands/discord-setup-guide.md`
+- Guía: `/Users/<user>/root-project-path/claude-commands/commands/discord-setup-guide.md`

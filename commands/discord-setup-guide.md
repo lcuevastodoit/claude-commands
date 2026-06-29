@@ -137,7 +137,7 @@ Aplica a todos los proyectos:
 
 #### 2. Configuración de Proyecto (`.mcp.json`)
 
-En el directorio del proyecto (`/Users/lcuevas/Codigo/.mcp.json`):
+En el directorio del proyecto (`/Users/<user>/root-project-path/.mcp.json`):
 ```json
 {
   "mcpServers": {
@@ -172,7 +172,7 @@ claude mcp add discord -e DISCORD_BOT_TOKEN="$DISCORD_BOT_TOKEN" -- npx -y disco
 
 Ubicación del archivo de configuración local de Claude Code:
 - **macOS/Linux:** `~/.claude.json`
-- **Proyecto:** `/Users/lcuevas/Codigo/.mcp.json`
+- **Proyecto:** `/Users/<user>/root-project-path/.mcp.json`
 
 **Estructura del archivo `.mcp.json`:**
 
@@ -196,7 +196,7 @@ Ubicación del archivo de configuración local de Claude Code:
 {
   "mcpServers": {
     "discord": {
-      "command": "/Users/lcuevas/Codigo/discord-mcp-bridge.js"
+      "command": "/Users/<user>/root-project-path/discord-mcp-bridge.js"
     }
   }
 }
@@ -224,7 +224,7 @@ claude mcp add-json discord '{"command": "npx", "args": ["-y", "discord-mcp@late
 
 ### Scripts de Node.js (Funcionales)
 
-Ubicación: `/Users/lcuevas/Codigo/scripts/` y `/Users/lcuevas/Codigo/claude-commands/commands/`
+Ubicación: `/Users/<user>/root-project-path/scripts/` y `/Users/<user>/root-project-path/claude-commands/commands/`
 
 | Script | Propósito | Ejemplo de uso |
 |--------|-----------|----------------|
@@ -234,7 +234,7 @@ Ubicación: `/Users/lcuevas/Codigo/scripts/` y `/Users/lcuevas/Codigo/claude-com
 
 ### Comandos Claude Code
 
-Ubicación: `/Users/lcuevas/Codigo/.claude/commands/`
+Ubicación: `/Users/<user>/root-project-path/.claude/commands/`
 
 - `discord-send.md` - Definición del comando `/discord-send`
 - `discord-read.md` - Definición del comando `/discord-read`
@@ -247,17 +247,17 @@ Ubicación: `/Users/lcuevas/Codigo/.claude/commands/`
 
 ```bash
 # Canal específico
-node /Users/lcuevas/Codigo/scripts/discord-send.js \
+node /Users/<user>/root-project-path/scripts/discord-send.js \
   --message="Hola equipo" \
   --channel=1019945518501204002
 
 # DM a usuario
-node /Users/lcuevas/Codigo/scripts/discord-send.js \
+node /Users/<user>/root-project-path/scripts/discord-send.js \
   --message="Hola Luis" \
   --user=970114927488557146
 
 # Usar canal por defecto (DISCORD_CHANNEL_ID)
-node /Users/lcuevas/Codigo/scripts/discord-send.js \
+node /Users/<user>/root-project-path/scripts/discord-send.js \
   --message="Deploy completado ✅"
 ```
 
@@ -265,11 +265,11 @@ node /Users/lcuevas/Codigo/scripts/discord-send.js \
 
 ```bash
 # Últimos 10 mensajes (default)
-node /Users/lcuevas/Codigo/scripts/discord-read.js \
+node /Users/<user>/root-project-path/scripts/discord-read.js \
   --channel=1019945518501204002
 
 # Especificar cantidad
-node /Users/lcuevas/Codigo/scripts/discord-read.js \
+node /Users/<user>/root-project-path/scripts/discord-read.js \
   --channel=1019945518501204002 \
   --limit=20
 ```
@@ -278,7 +278,7 @@ node /Users/lcuevas/Codigo/scripts/discord-read.js \
 
 ```bash
 # Revisar cada 30 segundos
-node /Users/lcuevas/Codigo/scripts/discord-monitor.js \
+node /Users/<user>/root-project-path/scripts/discord-monitor.js \
   --channel=1019945518501204002 \
   --interval=30
 ```
@@ -358,16 +358,16 @@ echo 'export DISCORD_BOT_TOKEN="..."' >> ~/.zshrc
 ### 2. Uso diario
 ```bash
 # Leer mensajes recientes
-node /Users/lcuevas/Codigo/scripts/discord-read.js --limit=5
+node /Users/<user>/root-project-path/scripts/discord-read.js --limit=5
 
 # Enviar notificación
-node /Users/lcuevas/Codigo/scripts/discord-send.js --message="Build completado"
+node /Users/<user>/root-project-path/scripts/discord-send.js --message="Build completado"
 ```
 
 ### 3. Monitoreo (si es necesario)
 ```bash
 # En una terminal separada o con Monitor
-cd /Users/lcuevas/Codigo/scripts && node discord-monitor.js --interval=60
+cd /Users/<user>/root-project-path/scripts && node discord-monitor.js --interval=60
 ```
 
 ---
