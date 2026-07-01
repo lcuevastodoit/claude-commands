@@ -116,7 +116,7 @@ Once all test cases created in `step-2-gherkin-plan` pass in GREEN:
 | Go | go test | `go test ./...` |
 | Others | - | Use the command defined in the project (`make test`, `npm test`, etc.). |
 
-> If the project uses Docker, prefer the commands from `make test` defined in its `Makefile`.
+> If the project uses Docker, use `docker exec`, and use `--fail-fast` if it's rspec. For Jest, use `--maxWorkers=1` to avoid concurrency issues.
 
 ## Output Format by Iteration
 
